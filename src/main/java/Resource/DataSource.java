@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class DataSource {
 
-    private final Connection connection;
+    private static Connection connection;
 
-    public Connection getConnection() {
+    public static Connection getConnection() {
         return connection;
     }
 
@@ -29,5 +29,10 @@ public class DataSource {
 
     }
 }
+
+
+
+
+
 
 

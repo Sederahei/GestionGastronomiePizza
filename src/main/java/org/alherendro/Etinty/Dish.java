@@ -1,11 +1,46 @@
 package org.alherendro.Etinty;
+import java.util.List;
 
 public class Dish {
-    private  String name;
-    private int price;
+    private int id;
+    private String name;
+    private double price;
+    private List<IngredientQuantity> ingredients;
 
-    public Dish(String name, int price) {
+    public Dish(int id, String name, double price, List<IngredientQuantity> ingredients) {
+        this.id = id;
         this.name = name;
+        this.price = price;
+        this.ingredients = ingredients;
+    }
+
+    public double getIngredientCost() {
+        return ingredients.stream()
+                .mapToDouble(iq -> iq.getIngredient().getPrice() * iq.getQuantity())
+                .sum();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public List<IngredientQuantity> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<IngredientQuantity> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -13,43 +48,7 @@ public class Dish {
         return name;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public Dish() {
-        super();
-    }
-
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "Dish{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                '}';
     }
 }

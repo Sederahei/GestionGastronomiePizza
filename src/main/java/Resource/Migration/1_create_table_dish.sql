@@ -9,8 +9,7 @@ GRANT ALL PRIVILEGES ON DATABASE lagastronomiepizza TO lagastro_user;
 CREATE TYPE unit_enum AS ENUM ('G', 'L', 'U');
 
 
-CREATE TABLE ingredient
-(
+CREATE TABLE ingredient(
     id_ingredient   SERIAL PRIMARY KEY,
     name            VARCHAR(100) NOT NULL,
     update_datetime TIMESTAMP    NOT NULL,
@@ -18,15 +17,13 @@ CREATE TABLE ingredient
     unit            unit_enum    NOT NULL
 );
 
-CREATE TABLE dish
-(
+CREATE TABLE dish(
     id_dish    SERIAL PRIMARY KEY,
     name       VARCHAR(100) NOT NULL,
     unit_price NUMERIC      NOT NULL
 );
 
-CREATE TABLE dish_ingredient
-(
+CREATE TABLE dish_ingredient(
     id_dish           INT REFERENCES dish (id_dish) ON DELETE CASCADE,
     id_ingredient     INT REFERENCES ingredient (id_ingredient) ON DELETE CASCADE,
     required_quantity NUMERIC   NOT NULL,
