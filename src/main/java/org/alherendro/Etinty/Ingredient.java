@@ -1,11 +1,55 @@
 package org.alherendro.Etinty;
 
+import org.alherendro.Etinty.Unit;
+
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class Ingredient {
+    private int id;
     private String name;
-    private LocalDateTime modificated;
+    private LocalDateTime updateDatetime;
+    private double price;
+    private Unit unit;
+
+    public Ingredient(int id, String name, LocalDateTime updateDatetime, double price, Unit unit) {
+        this.id = id;
+        this.name = name;
+        this.updateDatetime = updateDatetime;
+        this.price = price;
+        this.unit = unit;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public LocalDateTime getUpdateDatetime() {
+        return updateDatetime;
+    }
+
+    public void setUpdateDatetime(LocalDateTime updateDatetime) {
+        this.updateDatetime = updateDatetime;
+    }
 
     public String getName() {
         return name;
@@ -14,34 +58,4 @@ public class Ingredient {
     public void setName(String name) {
         this.name = name;
     }
-
-    public LocalDateTime getModificated() {
-        return modificated;
-    }
-
-    public void setModificated(LocalDateTime modificated) {
-        this.modificated = modificated;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Ingredient that = (Ingredient) o;
-        return Objects.equals(getName(), that.getName()) && Objects.equals(getModificated(), that.getModificated());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getModificated());
-    }
-
-    @Override
-    public String toString() {
-        return "Ingredient{" +
-                "name='" + name + '\'' +
-                ", modificated=" + modificated +
-                '}';
-    }
 }
-
