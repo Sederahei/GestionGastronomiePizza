@@ -12,6 +12,7 @@ VALUES (1, 1, 100, 'G'),
 
 
 
+
 INSERT INTO ingredient (name, update_datetime, price, unit)
 VALUES ('Saucisse', '2025-01-01 00:00', 20, 'G'),
        ('Huile', '2025-01-01 00:00', 10000, 'L'),
