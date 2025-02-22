@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/Resource/Migration/1_create_table_dish.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Resource/Testdata/insert.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/Resource/db.sql" dialect="PostgreSQL" />
   </component>
 </project>

@@ -1,41 +1,5 @@
--- 1. Création de l'utilisateur
-CREATE USER lagastro_user WITH PASSWORD 'alherendro';
 
-
-CREATE DATABASE lagastronomiepizza OWNER lagastro_user;
-
-\c lagastronomiepizza;
-
-GRANT ALL PRIVILEGES ON DATABASE lagastronomiepizza TO lagastro_user;
-
-
-CREATE TYPE unit_enum AS ENUM ('G', 'L', 'U');
-
-
-CREATE TABLE ingredient
-(
-    id_ingredient   SERIAL PRIMARY KEY,
-    name            VARCHAR(100) NOT NULL,
-    update_datetime TIMESTAMP    NOT NULL,
-    unit_price      NUMERIC      NOT NULL,
-    unit            unit_enum    NOT NULL
-);
-
-CREATE TABLE dish
-(
-    id_dish    SERIAL PRIMARY KEY,
-    name       VARCHAR(100) NOT NULL,
-    unit_price NUMERIC      NOT NULL
-);
-
-CREATE TABLE dish_ingredient
-(
-    id_dish           INT REFERENCES dish (id_dish) ON DELETE CASCADE,
-    id_ingredient     INT REFERENCES ingredient (id_ingredient) ON DELETE CASCADE,
-    required_quantity NUMERIC   NOT NULL,
-    unit              unit_enum NOT NULL,
-    PRIMARY KEY (id_dish, id_ingredient)
-);
+-- 1. Afficher tous les ingreédients
 
 
 
@@ -140,45 +104,3 @@ CREATE TABLE dish_ingredient (
     unit unit_enum NOT NULL,
     PRIMARY KEY (id_dish, id_ingredient)
 );
-
-
-
-
-
-
--- 6. Calcul du coût total des ingrédients du Hot Dog
-
-
-
-// 2. Classe Ingredi
-
-// 3. Classe Dish.java
-
-
-
-// 5. DAO pour DishDAO.java
-
-
-// 6. Classe DatabaseConnection.java
-
-// 7. Classe de test DishDAOTest.java
-
-
-// 8. StaticDataSource.java (Données statiques)
-package com.lagastronomiepizza.datasource;
-
-import com.lagastronomiepizza.model.*;
-import java.time.LocalDateTime;
-import java.util.*;
-
-public class StaticDataSource {
-    public static Dish getHotDogDish() {
-        List<IngredientQuantity> ingredients = Arrays.asList(
-                new IngredientQuantity(new Ingredient(1, "Saucisse", LocalDateTime.now(), 20, Unit.G), 100),
-                new IngredientQuantity(new Ingredient(2, "Huile", LocalDateTime.now(), 10000, Unit.L), 0.15),
-                new IngredientQuantity(new Ingredient(3, "Oeuf", LocalDateTime.now(), 1000, Unit.U), 1),
-                new IngredientQuantity(new Ingredient(4, "Pain", LocalDateTime.now(), 1000, Unit.U), 1)
-        );
-        return new Dish(1, "Hot Dog", 15000, ingredients);
-    }
-}

@@ -9,6 +9,9 @@ public class Dish {
     private double unitPrice;
     private List<IngredientQuantity> ingredients;
 
+    public Dish() {
+    }
+
     public Dish(int id, String name, double unitPrice, List<IngredientQuantity> ingredients) {
         this.id = id;
         this.name = name;

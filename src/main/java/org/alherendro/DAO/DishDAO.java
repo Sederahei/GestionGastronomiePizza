@@ -15,25 +15,25 @@ import java.util.List;
 
 public class DishDAO {
     public Dish findById(int id) throws SQLException {
-        String query = "SELECT d.\"id_dish\", d.\"name\", d.\"unit_price\", " +
-                "i.\"id_ingredient\", i.\"name\", i.\"update_datetime\", i.\"unit_price\", i.\"unit\", di.\"required_quantity\" " +
-                "FROM \"dish\" d " +
-                "JOIN \"dish_ingredient\" di ON d.\"id_dish\" = di.\"id_dish\" " +
-                "JOIN \"ingredient\" i ON i.\"id_ingredient\" = di.\"id_ingredient\" " +
-                "WHERE d.\"id_dish\" = ?";
+        String query = "SELECT d.id_dish, d.name, d.unit_price, " +
+                "i.id_ingredient, i.name, i.update_datetime, i.unit_price, i.unit, di.required_quantity " +
+                "FROM dish d " +
+                "JOIN dish_ingredient di ON d.id_dish = di.id_dish " +
+                "JOIN ingredient i ON i.id_ingredient = di.id_ingredient " +
+                "WHERE d.id_dish = ?";
         try (Connection conn = DataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-            Dish  dish = null;
-            List<IngredientQuantity> ngredients = new ArrayList<>();
+            Dish dish = null;
+            List<IngredientQuantity> ingredients = new ArrayList<>();
             while (rs.next()) {
                 if (dish == null) {
                     dish = new Dish(
                             rs.getInt("id_dish"),
                             rs.getString("name"),
                             rs.getDouble("unit_price"),
-                            ngredients
+                            ingredients
                     );
                 }
                 Ingredient ingredient = new Ingredient(
@@ -43,7 +43,7 @@ public class DishDAO {
                         rs.getDouble("unit_price"),
                         Unit.valueOf(rs.getString("unit"))
                 );
-                ngredients.add(new IngredientQuantity(ingredient, rs.getDouble("required_quantity")));
+                ingredients.add(new IngredientQuantity(ingredient, rs.getDouble("required_quantity")));
             }
             if (dish == null) {
                 throw new SQLException("No dish found with ID: " + id);

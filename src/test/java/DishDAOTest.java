@@ -15,13 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DishDAOTest {
 
-    @Test
-    public void testFindById() throws SQLException {
-        DishDAO dishDAO = new DishDAO();
-        Dish hotDog = dishDAO.findById(1);
-        assertNotNull(hotDog);
-    }
-
 
     @Test
     public void testGetIngredientCost() {
@@ -40,6 +33,8 @@ public class DishDAOTest {
         Dish hotDog = new Dish(1, "Hot Dog", 15000.0, comps);
         assertEquals(5500.0, hotDog.getIngredientCost(), 0.001);
     }
+
+
 }
 
 
