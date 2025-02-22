@@ -1,6 +1,7 @@
 package org.alherendro.Etinty;
 import java.util.List;
 
+
 public class Dish {
 
 
@@ -27,5 +28,11 @@ public class Dish {
 
     public String getName() {
         return name;
+    }
+
+    public double getUnitPrice() {    return unitPrice;    }
+
+    public List<IngredientQuantity> getIngredients() {
+        return ingredients;
     }
 }

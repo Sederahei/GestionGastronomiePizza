@@ -1,3 +1,6 @@
+
+\c lagastronomiepizza;
+
 CREATE TYPE unit AS ENUM ('G', 'L', 'U');
 
 CREATE TABLE Ingredient

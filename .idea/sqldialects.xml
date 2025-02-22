@@ -3,6 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/src/main/java/Resource/Migration/1_create_table_dish.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/Resource/Testdata/insert.sql" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Resource/db.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Resource/db.migration" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/org/alherendro/DAO/DishDAO.java" dialect="GenericSQL" />
   </component>
 </project>
