@@ -1,4 +1,5 @@
 
+import org.alherendro.dao.DishDAO;
 import org.alherendro.entity.Dish;
 import org.alherendro.entity.Ingredient;
 import org.alherendro.entity.IngredientQuantity;
@@ -9,6 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DishDAOTest{
+   // new DishDAO(); ==> tokiy ho io o retur
     @Test
     public void testGetIngredientCost() {
         Ingredient sausage = new Ingredient(1, "Sausage", LocalDateTime.now(), 20.0, Unit.G);
