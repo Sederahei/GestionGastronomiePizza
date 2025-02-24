@@ -79,20 +79,37 @@ public class DishDAO implements CrudOperations <Dish> {
     public Dish update(Dish entity) {
         String sql = "UPDATE dish SET name = ?, unit_price = ? WHERE id_dish = ?";
         try {
-            Connection
+            Connection connection = DataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, entity.getName());
+            stmt.setDouble(2, entity.getUnitPrice());
+            stmt.setLong(3, entity.getId());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
 
-        }
-
-
-
-
-
-        throw new UnsupportedOperationException("mbola tsy implementer");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }throw new UnsupportedOperationException("mbola tsy implementer");
 
     }
 
+
     @Override
     public Dish delete(Dish entity) {
+        String sql="DELETE FROM dish WHERE id_dish = ?";
+        try {
+            Connection connection = DataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setLong(1, entity.getId());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+
+            }
+
+        }catch (SQLException e){
+            new UnsupportedOperationException("tndremo!!! implementatio tsy vita");
+        }
 
 
 

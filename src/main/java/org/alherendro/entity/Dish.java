@@ -34,4 +34,8 @@ public class Dish {
     public List<IngredientQuantity> getIngredients() {
         return ingredients;
     }
+
+    public int getId() {
+        return id;
+    }
 }
