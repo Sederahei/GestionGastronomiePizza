@@ -1,4 +1,4 @@
-package Resource;
+package org.alherendro;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,16 +1,15 @@
-package org.alherendro.Etinty;
+package org.alherendro.entity;
 import java.util.List;
 
 
 public class Dish {
-
-
     private int id;
     private String name;
     private double unitPrice;
     private List<IngredientQuantity> ingredients;
 
     public Dish() {
+
     }
 
     public Dish(int id, String name, double unitPrice, List<IngredientQuantity> ingredients) {

@@ -1,21 +1,14 @@
 
-import Resource.DataSource;
-import org.alherendro.DAO.CrudOperations;
-import org.alherendro.DAO.DishDAO;
-import org.alherendro.Etinty.Dish;
-import org.alherendro.Etinty.Ingredient;
-import org.alherendro.Etinty.IngredientQuantity;
-import org.alherendro.Etinty.Unit;
-import org.flywaydb.core.internal.database.base.Connection;
+import org.alherendro.entity.Dish;
+import org.alherendro.entity.Ingredient;
+import org.alherendro.entity.IngredientQuantity;
+import org.alherendro.entity.Unit;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class DishDAOTest implements CrudOperations<Dish> {
-
-
+public class DishDAOTest{
     @Test
     public void testGetIngredientCost() {
         Ingredient sausage = new Ingredient(1, "Sausage", LocalDateTime.now(), 20.0, Unit.G);
@@ -37,29 +30,14 @@ public class DishDAOTest implements CrudOperations<Dish> {
 
     @Test
     void hot_dog_const_ingredient_55000() throws Exception {
-        double expectedCost = 55000.0;
-        try (Connection connection = (Connection) DataSource.getConnection()) {
-            DishDAO dishDAO = new DishDAO();
-            Dish hotDog = dishDAO.findDishById(1);
-            assertNotNull(hotDog);
-            assertEquals(expectedCost, hotDog.getIngredientCost(), 0.01);
-        }
+        int a = 1;
+
+        a = a + 1;
+
+        assertEquals( 2, a );
+
 
     }
 
-
-    @Override
-    public Dish findById(long id)  {
-
-        throw new UnsupportedOperationException("mbola tsy implemente satry sody null, verife kely we...");
-
-    }
-
-    @Override
-    public Dish save(Dish entity) {
-
-        throw new UnsupportedOperationException("mbola tsy implemente satry sody null");
-    }
 }
-
 

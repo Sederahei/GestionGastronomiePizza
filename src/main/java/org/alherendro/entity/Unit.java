@@ -1,4 +1,4 @@
-package org.alherendro.Etinty;
+package org.alherendro.entity;
 
 public enum Unit {
     G,

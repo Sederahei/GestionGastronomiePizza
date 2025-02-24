@@ -1,10 +1,10 @@
-package org.alherendro.DAO;
+package org.alherendro.dao;
 
-import Resource.DataSource;
-import org.alherendro.Etinty.Dish;
-import org.alherendro.Etinty.Ingredient;
-import org.alherendro.Etinty.IngredientQuantity;
-import org.alherendro.Etinty.Unit;
+import org.alherendro.DataSource;
+import org.alherendro.entity.Dish;
+import org.alherendro.entity.Ingredient;
+import org.alherendro.entity.IngredientQuantity;
+import org.alherendro.entity.Unit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +16,8 @@ import java.util.List;
 public class DishDAO implements CrudOperations <Dish> {
 
 
-    public Dish findDishById(long id) throws SQLException {
+    public Dish findById(long id) throws SQLException {
+
 
     String required =
             """
@@ -33,6 +34,7 @@ public class DishDAO implements CrudOperations <Dish> {
         PreparedStatement stmt = conn.prepareStatement(required)) {
         stmt.setLong(1, id);
         ResultSet rs = stmt.executeQuery();
+
         List<IngredientQuantity> ingredients = new ArrayList<>();
         while (rs.next()) {
             Ingredient ingredient = new Ingredient(
@@ -53,14 +55,6 @@ public class DishDAO implements CrudOperations <Dish> {
     }
 }
 
-    public Dish findById(long id) {
-
-        try {
-            return findDishById(id);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public Dish save(Dish entity) {
@@ -73,16 +67,40 @@ public class DishDAO implements CrudOperations <Dish> {
 
             ResultSet rs  = stmt.executeQuery();
             if (rs.next()) {
-                return new Dish(
-                        rs.getString("name"),
-                        rs.getDouble("unit_price")
-                        rs.getInt("id_dish")
 
-                );
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return entity;
     }
+
+    @Override
+    public Dish update(Dish entity) {
+        String sql = "UPDATE dish SET name = ?, unit_price = ? WHERE id_dish = ?";
+        try {
+            Connection
+
+        }
+
+
+
+
+
+        throw new UnsupportedOperationException("mbola tsy implementer");
+
+    }
+
+    @Override
+    public Dish delete(Dish entity) {
+
+
+
+
+
+
+        throw new UnsupportedOperationException("mbola tsy implementer");
+    }
+
 }
+

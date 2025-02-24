@@ -1,6 +1,4 @@
-package org.alherendro.Etinty;
-
-import org.alherendro.Etinty.Unit;
+package org.alherendro.entity;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +15,9 @@ public class Ingredient {
         this.updateDatetime = updateDatetime;
         this.unitPrice = unitPrice;
         this.unit = unit;
+    }
+    public Ingredient() {
+
     }
 
     public double getUnitPrice() {

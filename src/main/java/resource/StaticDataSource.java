@@ -1,10 +1,10 @@
-package Resource;
+package resource;
 
 
-import org.alherendro.Etinty.Dish;
-import org.alherendro.Etinty.Ingredient;
-import org.alherendro.Etinty.IngredientQuantity;
-import org.alherendro.Etinty.Unit;
+import org.alherendro.entity.Dish;
+import org.alherendro.entity.Ingredient;
+import org.alherendro.entity.IngredientQuantity;
+import org.alherendro.entity.Unit;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

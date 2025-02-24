@@ -1,4 +1,4 @@
-package org.alherendro.Etinty;
+package org.alherendro.entity;
 
 
     public class IngredientQuantity {
@@ -10,7 +10,6 @@ package org.alherendro.Etinty;
             this.ingredient = ingredient;
             this.requiredQuantity = requiredQuantity;
         }
-
         public Ingredient getIngredient() {
             return ingredient;
         }
