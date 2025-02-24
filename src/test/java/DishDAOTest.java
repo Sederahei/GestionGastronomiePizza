@@ -13,31 +13,56 @@ public class DishDAOTest{
     public void testGetIngredientCost() {
         Ingredient sausage = new Ingredient(1, "Sausage", LocalDateTime.now(), 20.0, Unit.G);
         Ingredient oil = new Ingredient(2, "Oil", LocalDateTime.now(), 10000.0, Unit.L);
-        Ingredient egg = new Ingredient(3, "Egg", LocalDateTime.now(), 1000.0, Unit.U);
-        Ingredient bread = new Ingredient(4, "Bread", LocalDateTime.now(), 1000.0, Unit.U);
-
-        List<IngredientQuantity> comps = List.of(
-                new IngredientQuantity(sausage, 100),
-                new IngredientQuantity(oil, 0.15),
-                new IngredientQuantity(egg, 1),
-                new IngredientQuantity(bread, 1)
-        );
+        List<IngredientQuantity> comps = getIngredientQuantities(LocalDateTime.now(), LocalDateTime.now(), sausage, oil);
 
         Dish hotDog = new Dish(1, "Hot Dog", 15000.0, comps);
         assertEquals(5500.0, hotDog.getIngredientCost(), 0.001);
     }
 
 
+   // @Test
+    // void hot_dog_const_ingredient_55000() throws Exception {
+    //        int a = 1;
+    //
+    //        a = a + 1;
+    //
+    //        assertEquals( 2, a );
+    //
+    //
+    //    }
+
     @Test
     void hot_dog_const_ingredient_55000() throws Exception {
-        int a = 1;
+        // Données de test
+        Ingredient sausage = new Ingredient(1, "Sausage", LocalDateTime.of(2025, 1, 1, 0, 0), 20.0, Unit.G);
+        Ingredient oil = new Ingredient(2, "Oil", LocalDateTime.of(2025, 1, 1, 0, 0), 10000.0, Unit.L);
+        List<IngredientQuantity> components = getIngredientQuantities(LocalDateTime.of(2025, 1, 1, 0, 0), LocalDateTime.of(2025, 1, 1, 0, 0), sausage, oil);
 
-        a = a + 1;
+        // Création du plat Hot Dog
+        Dish hotDog = new Dish(1, "Hot Dog", 15000.0, components);
 
-        assertEquals( 2, a );
-
+        // Vérification du coût total attendu (5500 Ar)
+        System.out.println(hotDog.getIngredientCost());
+        assertEquals(5500.0, hotDog.getIngredientCost(), 0.001,
+                "Le coût total des ingrédients du Hot Dog doit être 5500 Ar.");
 
     }
+
+
+    private static List<IngredientQuantity> getIngredientQuantities(LocalDateTime of, LocalDateTime of1, Ingredient sausage, Ingredient oil) {
+        Ingredient egg = new Ingredient(3, "Egg", of, 1000.0, Unit.U);
+        Ingredient bread = new Ingredient(4, "Bread", of1, 1000.0, Unit.U);
+
+        // Composition du plat
+        List<IngredientQuantity> components = List.of(
+                new IngredientQuantity(sausage, 100),    // 20 * 100 = 2000
+                new IngredientQuantity(oil, 0.15),       // 10000 * 0.15 = 1500
+                new IngredientQuantity(egg, 1),          // 1000 * 1 = 1000
+                new IngredientQuantity(bread, 1)         // 1000 * 1 = 1000
+        );
+        return components;
+    }
+
 
 }
 

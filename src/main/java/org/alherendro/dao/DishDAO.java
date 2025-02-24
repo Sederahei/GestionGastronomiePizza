@@ -10,50 +10,53 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class DishDAO implements CrudOperations <Dish> {
+public class DishDAO implements CrudOperations<Dish> {
 
 
     public Dish findById(long id) throws SQLException {
 
 
-    String required =
-            """
-                SELECT 
-                    d.id_dish, d.name, d.unit_price, 
-                    i.id_ingredient, i.name, i.update_datetime, i.unit_price, 
-                    i.unit, di.required_quantity  
-                FROM dish d 
-                JOIN dish_ingredient di ON d.id_dish = di.id_dish 
-                JOIN ingredient i ON i.id_ingredient = di.id_ingredient 
-                WHERE d.id_dish = ?
-            """;
-    try(Connection conn = DataSource.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(required)) {
-        stmt.setLong(1, id);
-        ResultSet rs = stmt.executeQuery();
+        String required =
+                """
+                            SELECT 
+                                d.id_dish, d.name, d.unit_price, 
+                                i.id_ingredient, i.name, i.update_datetime, i.unit_price, 
+                                i.unit, di.required_quantity  
+                            FROM dish d 
+                            JOIN dish_ingredient di ON d.id_dish = di.id_dish 
+                            JOIN ingredient i ON i.id_ingredient = di.id_ingredient 
+                            WHERE d.id_dish = ?
+                        """;
+        try (Connection conn = DataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(required)) {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
 
-        List<IngredientQuantity> ingredients = new ArrayList<>();
-        while (rs.next()) {
-            Ingredient ingredient = new Ingredient(
-                    rs.getInt("id_ingredient"),
+            List<IngredientQuantity> ingredients = new ArrayList<>();
+            while (rs.next()) {
+                Ingredient ingredient = new Ingredient(
+                        rs.getInt("id_ingredient"),
+                        rs.getString("name"),
+                        rs.getTimestamp("update_datetime").toLocalDateTime(),
+                        rs.getDouble("unit_price"),
+                        Unit.valueOf(rs.getString("unit"))
+                );
+                ingredients.add(new IngredientQuantity(ingredient, rs.getDouble("required_quantity")));
+            }
+            return new Dish(
+                    rs.getInt("id_dish"),
                     rs.getString("name"),
-                    rs.getTimestamp("update_datetime").toLocalDateTime(),
                     rs.getDouble("unit_price"),
-                    Unit.valueOf(rs.getString("unit"))
+                    ingredients
             );
-            ingredients.add(new IngredientQuantity(ingredient, rs.getDouble("required_quantity")));
         }
-        return new Dish(
-                rs.getInt("id_dish"),
-                rs.getString("name"),
-                rs.getDouble("unit_price"),
-                ingredients
-        );
     }
-}
 
 
     @Override
@@ -65,7 +68,7 @@ public class DishDAO implements CrudOperations <Dish> {
             stmt.setString(1, entity.getName());
             stmt.setDouble(2, entity.getUnitPrice());
 
-            ResultSet rs  = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
 
             }
@@ -90,14 +93,15 @@ public class DishDAO implements CrudOperations <Dish> {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }throw new UnsupportedOperationException("mbola tsy implementer");
+        }
+        throw new UnsupportedOperationException("mbola tsy implementer");
 
     }
 
 
     @Override
     public Dish delete(Dish entity) {
-        String sql="DELETE FROM dish WHERE id_dish = ?";
+        String sql = "DELETE FROM dish WHERE id_dish = ?";
         try {
             Connection connection = DataSource.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -107,17 +111,16 @@ public class DishDAO implements CrudOperations <Dish> {
 
             }
 
-        }catch (SQLException e){
-            new UnsupportedOperationException("tndremo!!! implementatio tsy vita");
+        } catch (SQLException e) {
+            new UnsupportedOperationException("tndremo!!!  tsy vita");
         }
-
-
-
-
 
 
         throw new UnsupportedOperationException("mbola tsy implementer");
     }
+
+
+
 
 }
 
