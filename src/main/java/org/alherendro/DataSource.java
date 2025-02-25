@@ -5,6 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DataSource {
+
+    // ecrire les attributs au debut de la classe
+    private static final String url = System.getenv("DB_URL");
+    private static final String USER = System.getenv("DB_USER");
+    private static final String PASSWORD = System.getenv("DB_PASSWORD");
     static {
         try {
             Class.forName("org.postgresql.Driver");
@@ -12,10 +17,7 @@ public class DataSource {
             throw new RuntimeException("PostgreSQL Driver not found.", e);
         }
     }
-    // ecrire les attributs au debut de la classe
-    private static final String url = System.getenv("DB_URL");
-    private static final String USER = System.getenv("DB_USER");
-    private static final String PASSWORD = System.getenv("DB_PASSWORD");
+
 
     public static Connection getConnection() throws SQLException {
         if (USER == null || PASSWORD == null) {
