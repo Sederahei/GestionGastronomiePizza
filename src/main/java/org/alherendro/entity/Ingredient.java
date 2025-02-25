@@ -46,6 +46,18 @@ public class Ingredient {
         this.unitPrice = unitPrice;
     }
 
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", updateDatetime=" + updateDatetime +
+                ", unitPrice=" + unitPrice +
+                ", unit=" + unit +
+                '}';
+    }
+
     public Ingredient(int id, String name, LocalDateTime updateDatetime, double unitPrice, Unit unit) {
         this.id = id;
         this.name = name;
