@@ -1,6 +1,8 @@
 package org.alherendro.entity;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Ingredient {
     //getter sy setter mila tao (jereo ny teneniny surlignignage jaune reny)
@@ -9,6 +11,23 @@ public class Ingredient {
     private LocalDateTime updateDatetime;
     private double unitPrice;
     private Unit unit;
+    
+
+    public Ingredient(int anInt, String name, double unitPrice, LocalDateTime updateDateTime, int unit) {
+
+        this.id = anInt;
+        this.name = name;
+        this.unitPrice = unitPrice;
+        this.updateDatetime = updateDateTime;
+        this.unit = Unit.values()[unit];
+    }
+
+
+
+
+    public static void add(Ingredient ingredient) {
+
+    }
 
     public int getId() {
         return id;
@@ -70,6 +89,11 @@ public class Ingredient {
     }
 
     public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public double getIngredientCost() {
+
         return unitPrice;
     }
 }

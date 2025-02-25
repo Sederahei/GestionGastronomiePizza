@@ -6,13 +6,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class IngredientDAO implements CrudOperations <Ingredient> {
 
-  //  ==>  tokiny ho  hhisy optionly eto ( si null , si return id)
+  //  ==>  tokiny ho  hisy optionly eto ( si null , si return id)
 
     @Override
     public   Ingredient findById(long id) throws SQLException {
@@ -99,5 +100,11 @@ public class IngredientDAO implements CrudOperations <Ingredient> {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Ingredient hot_dog_const_ingredient_55000() {
+        return new Ingredient(
+                137, "hot dog", LocalDateTime.of(2021, 5, 10, 0, 0), 55000, Unit.G);
     }
 }

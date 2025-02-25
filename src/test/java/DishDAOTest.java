@@ -38,6 +38,7 @@ public class DishDAOTest{
 
     @Test
     void hot_dog_const_ingredient_55000() throws Exception {
+
         // Données de test
         Ingredient sausage = new Ingredient(1, "Sausage", LocalDateTime.of(2025, 1, 1, 0, 0), 20.0, Unit.G);
         Ingredient oil = new Ingredient(2, "Oil", LocalDateTime.of(2025, 1, 1, 0, 0), 10000.0, Unit.L);
@@ -54,7 +55,7 @@ public class DishDAOTest{
     }
 
 
-    private static List<IngredientQuantity> getIngredientQuantities(LocalDateTime of, LocalDateTime of1, Ingredient sausage, Ingredient oil) {
+    static List<IngredientQuantity> getIngredientQuantities(LocalDateTime of, LocalDateTime of1, Ingredient sausage, Ingredient oil) {
         Ingredient egg = new Ingredient(3, "Egg", of, 1000.0, Unit.U);
         Ingredient bread = new Ingredient(4, "Bread", of1, 1000.0, Unit.U);
 

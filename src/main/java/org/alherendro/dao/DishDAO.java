@@ -1,15 +1,20 @@
 package org.alherendro.dao;
+
 import org.alherendro.DataSource;
 import org.alherendro.entity.Dish;
 import org.alherendro.entity.Ingredient;
 import org.alherendro.entity.IngredientQuantity;
 import org.alherendro.entity.Unit;
+
+import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 
 public class DishDAO implements CrudOperations<Dish> {
@@ -70,7 +75,6 @@ public class DishDAO implements CrudOperations<Dish> {
     }
 
 
-
     @Override
     public Dish update(Dish entity) {
         String sql = "UPDATE dish SET name = ?, unit_price = ? WHERE id_dish = ?";
@@ -108,16 +112,15 @@ public class DishDAO implements CrudOperations<Dish> {
     }
 
 
-
     public Dish getAll() {
         String sql = "SELECT id_dish, name, unit_price FROM dish";
-        try{
+        try {
             Connection connection = DataSource.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.executeQuery();
             ResultSet rs = stmt.executeQuery();
             List<Dish> dishes = new ArrayList<>();
-            while(rs.next()) {
+            while (rs.next()) {
                 dishes.add(new Dish(
                         rs.getInt("id_dish"),
                         rs.getString("name"),
@@ -132,6 +135,33 @@ public class DishDAO implements CrudOperations<Dish> {
     }
 
 
+    @Override
+    public Dish hot_dog_const_ingredient_55000() {
+        String sql = "SELECT  id_ingredient,name,updateDateTime,unitPrice,unit From Ingredient";
+
+        try {
+            Connection connection = DataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
+            List<Ingredient> ingredients = new ArrayList<>();
+            while (rs.next()) {
+                Ingredient.add(new Ingredient(
+                        rs.getInt(1),
+                        rs.getString("name"),
+                        rs.getDouble("unitPrice"),
+                        rs.getTimestamp("updateDateTime").toLocalDateTime(),
+                        rs.getInt("unit")
+                ));
+
+            }
+            return (Dish) List.of();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
 
 }
