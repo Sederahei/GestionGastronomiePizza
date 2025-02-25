@@ -1,20 +1,16 @@
 package org.alherendro.dao;
-
 import org.alherendro.DataSource;
 import org.alherendro.entity.Dish;
 import org.alherendro.entity.Ingredient;
 import org.alherendro.entity.IngredientQuantity;
 import org.alherendro.entity.Unit;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 public class DishDAO implements CrudOperations<Dish> {
 
@@ -99,22 +95,19 @@ public class DishDAO implements CrudOperations<Dish> {
 
     @Override
     public Dish delete(Dish entity) {
+
         String sql = "DELETE FROM dish WHERE id_dish = ?";
+
         try {
             Connection connection = DataSource.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setLong(1, entity.getId());
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
-            new UnsupportedOperationException("tndremo!!!  tsy vita");
+            new RuntimeException(e);
         }
-
-
-        throw new UnsupportedOperationException("mbola tsy implementer");
+        return entity;
     }
 
 
