@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class IngredientDAO implements CrudOperations <Ingredient> {
@@ -69,5 +71,33 @@ public class IngredientDAO implements CrudOperations <Ingredient> {
 
 
         throw new UnsupportedOperationException(".....");
+    }
+
+
+
+    public List<Ingredient> getAll() {
+
+        String sql = "SELECT id_ingredient, name, update_datetime, unit_price, unit FROM ingredient";
+        try {
+            Connection connection = DataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
+            List<Ingredient> ingredients = new ArrayList<>();
+
+            //==> rs.next : raha mbola misy ligne dia alaivo ny @ base
+            while (rs.next()) {
+                ingredients.add(new Ingredient(
+                        rs.getInt("id_ingredient"),
+                        rs.getString("name"),
+                        rs.getTimestamp("update_datetime").toLocalDateTime(),
+                        rs.getDouble("unit_price"),
+                        Unit.valueOf(rs.getString("unit"))
+                ));
+            }
+            return ingredients;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
