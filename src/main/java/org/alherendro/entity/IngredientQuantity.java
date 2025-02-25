@@ -1,6 +1,6 @@
 package org.alherendro.entity;
 
-
+// record class : classe misy getter ny atribut fa tsy misy setter
     public class IngredientQuantity {
 
         private final Ingredient ingredient;
