@@ -75,7 +75,7 @@ public class IngredientDAO implements CrudOperations <Ingredient> {
 
 
 
-    public List<Ingredient> getAll() {
+    public Ingredient getAll() {
 
         String sql = "SELECT id_ingredient, name, update_datetime, unit_price, unit FROM ingredient";
         try {
@@ -95,7 +95,7 @@ public class IngredientDAO implements CrudOperations <Ingredient> {
                         Unit.valueOf(rs.getString("unit"))
                 ));
             }
-            return ingredients;
+            return (Ingredient) ingredients;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

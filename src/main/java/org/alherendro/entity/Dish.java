@@ -19,6 +19,12 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
+    public Dish(int idDish, String name, double unitPrice) {
+        this.id = idDish;
+        this.name = name;
+        this.unitPrice = unitPrice;
+    }
+
     public double getIngredientCost() {
         return ingredients.stream()
                 .mapToDouble(iq -> iq.getIngredient().getUnitPrice() * iq.getRequiredQuantity())
@@ -37,5 +43,15 @@ public class Dish {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Dish{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", unitPrice=" + unitPrice +
+                ", ingredients=" + ingredients +
+                '}';
     }
 }

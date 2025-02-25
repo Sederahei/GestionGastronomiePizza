@@ -34,7 +34,7 @@ public class DishDAO implements CrudOperations<Dish> {
             ResultSet rs = stmt.executeQuery();
 
             List<IngredientQuantity> ingredients = new ArrayList<>();
-            while (rs.next()) {
+            if (rs.next()) {
                 Ingredient ingredient = new Ingredient(
                         rs.getInt("id_ingredient"),
                         rs.getString("name"),
@@ -107,6 +107,30 @@ public class DishDAO implements CrudOperations<Dish> {
             new RuntimeException(e);
         }
         return entity;
+    }
+
+
+
+    public Dish getAll() {
+        String sql = "SELECT id_dish, name, unit_price FROM dish";
+        try{
+            Connection connection = DataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
+            List<Dish> dishes = new ArrayList<>();
+            while(rs.next()) {
+                dishes.add(new Dish(
+                        rs.getInt("id_dish"),
+                        rs.getString("name"),
+                        rs.getDouble("unit_price")
+                ));
+            }
+            return (Dish) dishes;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 

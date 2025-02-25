@@ -10,8 +10,13 @@ public class IngredientDAOTest {
     @Test
     void get_all_ingredients_ok() {
 
+        // ==> Preparation
         IngredientDAO ingredientDAO = new IngredientDAO();
-        List<Ingredient> ingredients = ingredientDAO.getAll();
+
+        // ==> Execution
+        List<Ingredient> ingredients = (List<Ingredient>) ingredientDAO.getAll();
+
+        // ==> Verification
         System.out.println(ingredients);
         assertTrue(ingredients.size()>0);
     }

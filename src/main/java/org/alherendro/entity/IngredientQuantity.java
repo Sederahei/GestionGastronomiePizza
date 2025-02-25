@@ -17,5 +17,13 @@ package org.alherendro.entity;
         public double getRequiredQuantity() {
             return requiredQuantity;
         }
+
+    @Override
+    public String toString() {
+        return "IngredientQuantity{" +
+                "ingredient=" + ingredient +
+                ", requiredQuantity=" + requiredQuantity +
+                '}';
     }
+}
 

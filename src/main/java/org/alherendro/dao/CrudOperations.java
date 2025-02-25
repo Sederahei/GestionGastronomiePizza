@@ -7,4 +7,5 @@ public interface CrudOperations  <E> {
     E save(E entity);
     E update(E entity);
     E delete(E entity);
+    E getAll();
 }

@@ -1,10 +1,13 @@
 
 
+import org.alherendro.dao.DishDAO;
 import org.alherendro.entity.Dish;
 import org.alherendro.entity.Ingredient;
 import org.alherendro.entity.IngredientQuantity;
 import org.alherendro.entity.Unit;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,6 +68,21 @@ public class DishDAOTest{
         return components;
     }
 
+    @Test
+    void find_all_dishes_ok() throws SQLException {
+
+
+
+        // ==> Preparation
+        DishDAO dishDAO = new DishDAO();
+
+        // ==> Execution
+        Dish dish = dishDAO.findById(1);
+
+        // ==> Verification
+        System.out.println(dish);
+        assertEquals("Hot dog", dish.getName());
+    }
 
 }
 
