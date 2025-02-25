@@ -17,6 +17,7 @@ public class IngredientDAO implements CrudOperations <Ingredient> {
         //
         String sql  = "SELECT id_ingredient, name, update_datetime, unit_price, unit FROM ingredient WHERE id_ingredient = ?";
         try {
+
             Connection connection = DataSource.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setLong(1,id);

@@ -69,7 +69,7 @@ public class DishDAO implements CrudOperations<Dish> {
             stmt.setDouble(2, entity.getUnitPrice());
 
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+            if (rs.next()) { // continue
 
             }
         } catch (SQLException e) {

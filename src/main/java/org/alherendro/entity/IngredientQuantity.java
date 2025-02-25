@@ -3,8 +3,8 @@ package org.alherendro.entity;
 
     public class IngredientQuantity {
 
-        private Ingredient ingredient;
-        private double requiredQuantity;
+        private final Ingredient ingredient;
+        private final double requiredQuantity;
 
         public IngredientQuantity(Ingredient ingredient, double requiredQuantity) {
             this.ingredient = ingredient;
