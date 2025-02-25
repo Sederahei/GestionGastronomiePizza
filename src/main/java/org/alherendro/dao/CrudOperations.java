@@ -8,4 +8,5 @@ public interface CrudOperations  <E> {
     E update(E entity);
     E delete(E entity);
     E getAll();
+    E coutTotalht
 }

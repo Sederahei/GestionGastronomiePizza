@@ -84,5 +84,56 @@ public class DishDAOTest{
         assertEquals("Hot dog", dish.getName());
     }
 
+
+    @Test
+    void
+    save_dish_ok()  {
+
+        // ==> Preparation
+        DishDAO dishDAO = new DishDAO();
+        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
+
+        // ==> Execution
+        dishDAO.save(dish);
+
+        // ==> Verification
+        System.out.println(dish);
+        assertEquals(1, dish.getId());
+    }
+
+
+    @Test
+    void
+    update_dish_ok()  {
+
+        // ==> Preparation
+        DishDAO dishDAO = new DishDAO();
+        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
+
+        // ==> Execution
+        dishDAO.update(dish);
+
+        // ==> Verification
+        System.out.println(dish);
+        assertEquals(1, dish.getId());
+
+
+
+    }
+
+    @Test
+    void delete_dish_ok() {
+
+        // ==> Preparation
+        DishDAO dishDAO = new DishDAO();
+        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
+
+        // ==> Execution
+        dishDAO.delete(dish);
+
+        // ==> Verification
+        System.out.println(dish);
+        assertEquals(1, dish.getId());
+    }
 }
 
