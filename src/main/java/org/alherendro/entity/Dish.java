@@ -64,4 +64,8 @@ public class Dish {
                 .mapToDouble(iq -> iq.getIngredient().getUnitPrice() * iq.getRequiredQuantity())
                 .sum();
     }
+
+    public Object hot_dog_const_ingredient_55000() {
+        return List.of(new IngredientQuantity(ingredients.get(0).getIngredient(), 1.0));
+    }
 }

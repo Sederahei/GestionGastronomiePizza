@@ -147,19 +147,17 @@ public class DishDAO implements CrudOperations<Dish> {
             {
 
                 List<IngredientQuantity> ingredients = new ArrayList<>();
-                Dish dish = null;
+                Dish dish = new Dish();
                 double totalIngredientCost = 0.0;
                 long dishId = 0;
                 String dishName = null;
                 double dishPrice = 0;
 
                 while (rs.next()) {
-                    if (dish == null) {
-                        dishId = rs.getLong("id_dish");
-                        dishName = rs.getString("dish_name");
-                        dishPrice = rs.getDouble("dish_price");
-                        totalIngredientCost = rs.getDouble("total_ingredient_cost");
-                    }
+                    dishId = rs.getLong("id_dish");
+                    dishName = rs.getString("dish_name");
+                    dishPrice = rs.getDouble("dish_price");
+                    totalIngredientCost = rs.getDouble("total_ingredient_cost");
                     Ingredient ingredient = new Ingredient(
                             (int) rs.getLong("id_ingredient"),
                             rs.getString("ingredient_name"),
@@ -171,6 +169,7 @@ public class DishDAO implements CrudOperations<Dish> {
                 }
 
                 if (dishName == null) {
+
                     throw new SQLException("Hot Dog non trouvé.");
                 }
                 dish = new Dish(dishId, dishName, dishPrice, totalIngredientCost, ingredients);

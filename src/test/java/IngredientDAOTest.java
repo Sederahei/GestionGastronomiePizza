@@ -30,4 +30,17 @@ public class IngredientDAOTest {
         
 
     }
+
+    @Test
+    void save_ingredient() throws Exception {
+        Ingredient ingredient = new Ingredient();
+        ingredient.setName("Test");
+        ingredient.setUpdateDatetime(LocalDateTime.now());
+        ingredient.setUnitPrice(500.0);
+        ingredient.setUnit(Unit.G);
+
+        IngredientDAO ingredientDAO = new IngredientDAO();
+        System.out.println(ingredient);
+        ingredientDAO.save(ingredient);
+    }
 }
