@@ -13,23 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DishDAOTest{
-
-
-    @Test
-    public void hot_dog_const_ingredient_55000() throws Exception {
-        Ingredient ingredient = new Ingredient(1, "Hot dog", LocalDateTime.now(), 55000.0, Unit.G);
-
-        List<IngredientQuantity> ingredients = List.of(new IngredientQuantity(ingredient, 1.0));
-        Dish dish = new Dish(1, "Hot dog", 15000.0, ingredients);
-
-        System.out.println(IngredientQuantity.class.isAssignableFrom(dish.hot_dog_const_ingredient_55000().getClass()));
-        List<Ingredient> list = ingredients.stream().map(IngredientQuantity::getIngredient).toList(); List.of(55000.0, dish.hot_dog_const_ingredient_55000().getClass());
-
-
-    }
-
-
-   // @Test
+// @Test
     // void hot_dog_const_ingredient_55000() throws Exception {
     //        int a = 1;
     //
@@ -40,7 +24,20 @@ public class DishDAOTest{
     //
     //    }
 
+    @Test
+    public void hot_dog_const_ingredient_55000() throws Exception {
 
+
+        Ingredient ingredient = new Ingredient(1, "Hot dog", LocalDateTime.now(), 55000.0, Unit.G);
+
+        List<IngredientQuantity> ingredients = List.of(new IngredientQuantity(ingredient, 1.0));
+        Dish dish = new Dish(1, "Hot dog", 15000.0, ingredients);
+
+        System.out.println(IngredientQuantity.class.isAssignableFrom(dish.hot_dog_const_ingredient_55000().getClass()));
+        List<Ingredient> list = ingredients.stream().map(IngredientQuantity::getIngredient).toList(); List.of(55000.0, dish.hot_dog_const_ingredient_55000().getClass());
+
+
+    }
 
 
     @Test
