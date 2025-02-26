@@ -8,5 +8,4 @@ public interface CrudOperations  <E> {
     E update(E entity);
     E delete(E entity);
     E getAll();
-    E hot_dog_const_ingredient_55000();
 }

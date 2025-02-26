@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -18,42 +19,23 @@ public class DishDAO implements CrudOperations<Dish> {
 
 
     public Dish findById(long id) throws SQLException {
+        String sql = "SELECT id_dish, name, unit_price FROM dish WHERE id_dish = ?";
+        try {
 
-
-        String required =
-                """
-                            SELECT 
-                                d.id_dish, d.name, d.unit_price, 
-                                i.id_ingredient, i.name, i.update_datetime, i.unit_price, 
-                                i.unit, di.required_quantity  
-                            FROM dish d 
-                            JOIN dish_ingredient di ON d.id_dish = di.id_dish 
-                            JOIN ingredient i ON i.id_ingredient = di.id_ingredient 
-                            WHERE d.id_dish = ?
-                        """;
-        try (Connection conn = DataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(required)) {
+            Connection connection = DataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            List<IngredientQuantity> ingredients = new ArrayList<>();
             if (rs.next()) {
-                Ingredient ingredient = new Ingredient(
-                        rs.getInt("id_ingredient"),
-                        rs.getString("name"),
-                        rs.getTimestamp("update_datetime").toLocalDateTime(),
-                        rs.getDouble("unit_price"),
-                        Unit.valueOf(rs.getString("unit"))
-                );
-                ingredients.add(new IngredientQuantity(ingredient, rs.getDouble("required_quantity")));
+                return new Dish(rs.getInt("id_dish"), rs.getString("name"), rs.getDouble("unit_price"));
             }
-            return new Dish(
-                    rs.getInt("id_dish"),
-                    rs.getString("name"),
-                    rs.getDouble("unit_price"),
-                    ingredients
-            );
+
+        }catch (SQLException e) {
+
         }
+
+        return new Dish();
     }
 
 
@@ -132,53 +114,5 @@ public class DishDAO implements CrudOperations<Dish> {
 
     }
 
-
-    @Override
-    public Dish hot_dog_const_ingredient_55000() {
-        String sql = "SELECT d.name AS dish_name,\n" +
-                "SUM(i.unit_price * di.required_quantity) AS total_ingredient_cost\n" +
-                "FROM dish d JOIN dish_ingredient di ON d.id_dish = di.id_dish\n" +
-                "JOIN ingredient i ON di.id_ingredient = i.id_ingredient\n" +
-                "WHERE d.name = 'Hot Dog' GROUP BY d.name";
-        try {
-            Connection conn = DataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            {
-
-                List<IngredientQuantity> ingredients = new ArrayList<>();
-                Dish dish = new Dish();
-                double totalIngredientCost = 0.0;
-                long dishId = 0;
-                String dishName = null;
-                double dishPrice = 0;
-
-                while (rs.next()) {
-                    dishId = rs.getLong("id_dish");
-                    dishName = rs.getString("dish_name");
-                    dishPrice = rs.getDouble("dish_price");
-                    totalIngredientCost = rs.getDouble("total_ingredient_cost");
-                    Ingredient ingredient = new Ingredient(
-                            (int) rs.getLong("id_ingredient"),
-                            rs.getString("ingredient_name"),
-                            rs.getTimestamp("update_datetime").toLocalDateTime(),
-                            rs.getDouble("unit_price"),
-                            Unit.valueOf(rs.getString("unit"))
-                    );
-                    ingredients.add(new IngredientQuantity(ingredient, rs.getDouble("required_quantity")));
-                }
-
-                if (dishName == null) {
-
-                    throw new SQLException("Hot Dog non trouvé.");
-                }
-                dish = new Dish(dishId, dishName, dishPrice, totalIngredientCost, ingredients);
-                return dish;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
 

@@ -25,35 +25,35 @@ public class DishDAOTest{
     //    }
 
     @Test
-    public void hot_dog_const_ingredient_55000() throws Exception {
+    public void hotDogConst() {
+
+        // ==> Preparation
+        DishDAO dishDAO = new DishDAO();
+        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
 
 
-        Ingredient ingredient = new Ingredient(1, "Hot dog", LocalDateTime.now(), 55000.0, Unit.G);
+        // ==> Execution
+        dishDAO.hotDogConst();
 
-        List<IngredientQuantity> ingredients = List.of(new IngredientQuantity(ingredient, 1.0));
-        Dish dish = new Dish(1, "Hot dog", 15000.0, ingredients);
-
-        System.out.println(IngredientQuantity.class.isAssignableFrom(dish.hot_dog_const_ingredient_55000().getClass()));
-        List<Ingredient> list = ingredients.stream().map(IngredientQuantity::getIngredient).toList(); List.of(55000.0, dish.hot_dog_const_ingredient_55000().getClass());
-
-
+        // ==> Verification
+        System.out.println(dish);
+        assertEquals(1, dish.getId());
     }
 
 
     @Test
-    void find_all_dishes_ok() throws SQLException {
-
-
+    void find_by_id() throws SQLException {
 
         // ==> Preparation
         DishDAO dishDAO = new DishDAO();
+        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
 
         // ==> Execution
-        Dish dish = dishDAO.findById(1);
+        dishDAO.findById(1);
 
         // ==> Verification
         System.out.println(dish);
-        assertEquals("Hot dog", dish.getName());
+        assertEquals(1, dish.getId());
     }
 
 

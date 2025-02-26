@@ -3,12 +3,10 @@ package org.alherendro.dao;
 import org.alherendro.DataSource;
 import org.alherendro.entity.Ingredient;
 import org.alherendro.entity.Unit;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,8 +115,28 @@ public class IngredientDAO implements CrudOperations<Ingredient> {
     }
 
     @Override
-    public Ingredient hot_dog_const_ingredient_55000() {
-        return new Ingredient(
-                137, "hot dog", LocalDateTime.of(2021, 5, 10, 0, 0), 55000, Unit.G);
+    public Ingredient hotDogConst() {
+        String sql = "SELECT id_ingredient,name,update_datetime,unit_price,unit FROM ingredient WHERE id_ingredient = 1";
+        try {
+            Connection connection = DataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
+            List<Ingredient> ingredients = new ArrayList<>();
+            while (rs.next()) {
+                ingredients.add(new Ingredient(
+                        rs.getInt("id_ingredient"),
+                        rs.getString("name"),
+                        rs.getTimestamp("update_datetime").toLocalDateTime(),
+                        rs.getDouble("unit_price"),
+                        Unit.valueOf(rs.getString("unit"))
+                ));
+            }
+            return (Ingredient) ingredients;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+
 }

@@ -35,7 +35,7 @@ public class Dish {
         this.unitPrice = unitPrice;
     }
 
-    public Dish(long dishId, String dishName, double dishPrice, double totalIngredientCost, List<IngredientQuantity> ingredients) {
+    public Dish(long dishId, String dishName, double dishPrice, List<IngredientQuantity> ingredients) {
         this.id = (int) dishId;
         this.name = dishName;
         this.unitPrice = dishPrice;
@@ -58,7 +58,8 @@ public class Dish {
     }
 
 
-        // Quesion N°4
+    // Quesion N°4
+
     public double getIngredientCost() {
         return ingredients.stream()
                 .mapToDouble(iq -> iq.getIngredient().getUnitPrice() * iq.getRequiredQuantity())
