@@ -40,8 +40,8 @@ public class DishDAOTest{
     void hot_dog_const_ingredient_55000() throws Exception {
 
         // Données de test
-        Ingredient sausage = new Ingredient(1, "Sausage", LocalDateTime.of(2025, 1, 1, 0, 0), 20.0, Unit.G);
-        Ingredient oil = new Ingredient(2, "Oil", LocalDateTime.of(2025, 1, 1, 0, 0), 10000.0, Unit.L);
+        Ingredient sausage = new Ingredient(2, "Sausage", LocalDateTime.of(2025, 1, 1, 0, 0), 20.0, Unit.G);
+        Ingredient oil = new Ingredient(3, "Oil", LocalDateTime.of(2025, 1, 1, 0, 0), 10000.0, Unit.L);
         List<IngredientQuantity> components = getIngredientQuantities(LocalDateTime.of(2025, 1, 1, 0, 0), LocalDateTime.of(2025, 1, 1, 0, 0), sausage, oil);
 
         // Création du plat Hot Dog

@@ -6,18 +6,16 @@ import org.alherendro.entity.Ingredient;
 import org.alherendro.entity.IngredientQuantity;
 import org.alherendro.entity.Unit;
 
-import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 
 public class DishDAO implements CrudOperations<Dish> {
+
 
     public Dish findById(long id) throws SQLException {
 
@@ -137,32 +135,51 @@ public class DishDAO implements CrudOperations<Dish> {
 
     @Override
     public Dish hot_dog_const_ingredient_55000() {
-        String sql = "SELECT  id_ingredient,name,updateDateTime,unitPrice,unit From Ingredient";
-
+        String sql = "SELECT d.name AS dish_name,\n" +
+                "SUM(i.unit_price * di.required_quantity) AS total_ingredient_cost\n" +
+                "FROM dish d JOIN dish_ingredient di ON d.id_dish = di.id_dish\n" +
+                "JOIN ingredient i ON di.id_ingredient = i.id_ingredient\n" +
+                "WHERE d.name = 'Hot Dog' GROUP BY d.name";
         try {
-            Connection connection = DataSource.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.executeQuery();
+            Connection conn = DataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
-            List<Ingredient> ingredients = new ArrayList<>();
-            while (rs.next()) {
-                Ingredient.add(new Ingredient(
-                        rs.getInt(1),
-                        rs.getString("name"),
-                        rs.getDouble("unitPrice"),
-                        rs.getTimestamp("updateDateTime").toLocalDateTime(),
-                        rs.getInt("unit")
-                ));
+            {
 
+                List<IngredientQuantity> ingredients = new ArrayList<>();
+                Dish dish = null;
+                double totalIngredientCost = 0.0;
+                long dishId = 0;
+                String dishName = null;
+                double dishPrice = 0;
+
+                while (rs.next()) {
+                    if (dish == null) {
+                        dishId = rs.getLong("id_dish");
+                        dishName = rs.getString("dish_name");
+                        dishPrice = rs.getDouble("dish_price");
+                        totalIngredientCost = rs.getDouble("total_ingredient_cost");
+                    }
+                    Ingredient ingredient = new Ingredient(
+                            (int) rs.getLong("id_ingredient"),
+                            rs.getString("ingredient_name"),
+                            rs.getTimestamp("update_datetime").toLocalDateTime(),
+                            rs.getDouble("unit_price"),
+                            Unit.valueOf(rs.getString("unit"))
+                    );
+                    ingredients.add(new IngredientQuantity(ingredient, rs.getDouble("required_quantity")));
+                }
+
+                if (dishName == null) {
+                    throw new SQLException("Hot Dog non trouvé.");
+                }
+                dish = new Dish(dishId, dishName, dishPrice, totalIngredientCost, ingredients);
+                return dish;
             }
-            return (Dish) List.of();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
     }
-
-
 }
 

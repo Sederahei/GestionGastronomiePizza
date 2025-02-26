@@ -19,17 +19,29 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
+    @Override
+    public String toString() {
+        return "Dish{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", unitPrice=" + unitPrice +
+                ", ingredients=" + ingredients +
+                '}';
+    }
+
     public Dish(int idDish, String name, double unitPrice) {
         this.id = idDish;
         this.name = name;
         this.unitPrice = unitPrice;
     }
 
-    public double getIngredientCost() {
-        return ingredients.stream()
-                .mapToDouble(iq -> iq.getIngredient().getUnitPrice() * iq.getRequiredQuantity())
-                .sum();
+    public Dish(long dishId, String dishName, double dishPrice, double totalIngredientCost, List<IngredientQuantity> ingredients) {
+        this.id = (int) dishId;
+        this.name = dishName;
+        this.unitPrice = dishPrice;
+        this.ingredients = ingredients;
     }
+
 
     public String getName() {
         return name;
@@ -45,13 +57,11 @@ public class Dish {
         return id;
     }
 
-    @Override
-    public String toString() {
-        return "Dish{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", unitPrice=" + unitPrice +
-                ", ingredients=" + ingredients +
-                '}';
+
+        // Quesion N°4
+    public double getIngredientCost() {
+        return ingredients.stream()
+                .mapToDouble(iq -> iq.getIngredient().getUnitPrice() * iq.getRequiredQuantity())
+                .sum();
     }
 }
