@@ -29,8 +29,8 @@ public class IngredientQuantity {
         return id;
     }
 
-    public int getIngredient() {
-        return ingredient.getId();
+    public Ingredient getIngredient() {
+        return  ingredient;
     }
 
     public double getRequiredQuantity() {
