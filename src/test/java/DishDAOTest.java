@@ -1,14 +1,9 @@
-
-
 import org.alherendro.dao.DishDAO;
 import org.alherendro.entity.Dish;
 import org.alherendro.entity.Ingredient;
 import org.alherendro.entity.IngredientQuantity;
-import org.alherendro.entity.Unit;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,25 +19,9 @@ public class DishDAOTest{
     //
     //    }
 
-    @Test
-    public void hotDogConst() {
-
-        // ==> Preparation
-        DishDAO dishDAO = new DishDAO();
-        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
-
-
-        // ==> Execution
-        dishDAO.hotDogConst();
-
-        // ==> Verification
-        System.out.println(dish);
-        assertEquals(1, dish.getId());
-    }
-
 
     @Test
-    void find_by_id() throws SQLException {
+    void find_by_id()  {
 
         // ==> Preparation
         DishDAO dishDAO = new DishDAO();
@@ -71,6 +50,7 @@ public class DishDAOTest{
         // ==> Verification
         System.out.println(dish);
         assertEquals(1, dish.getId());
+
     }
 
 
@@ -107,5 +87,27 @@ public class DishDAOTest{
         System.out.println(dish);
         assertEquals(1, dish.getId());
     }
+
+
+    @Test
+    void calculate_total_ingredient_cost_for_hot_dog() {
+        // ==> Preparation( give)
+        Ingredient ingredient = new Ingredient();
+        IngredientQuantity ingredientQuantity = new IngredientQuantity(ingredient, 100);
+        
+        List<IngredientQuantity> ingredients = List.of(ingredientQuantity);
+        DishDAO  dishDAO = new DishDAO(); // objet
+        Dish dish = dishDAO.findById(1);
+
+        // ==> Execution
+        double cost = dish.getCost();
+
+        // ==> Verification
+        System.out.println("Total cost: " + cost);
+        assertEquals(cost, 5500.0);
+        
+    }
+
+
 }
 

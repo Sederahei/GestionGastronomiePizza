@@ -26,6 +26,13 @@ SELECT * FROM ingredient ORDER BY name ASC, unit_price DESC;
 SELECT * FROM ingredient ORDER BY name ASC, unit_price DESC LIMIT 1 OFFSET 1;
 
 
+CREATE TABLE ingredient_prices (
+    id SERIAL PRIMARY KEY,
+    ingredient_id INT REFERENCES ingredients(id) ON DELETE CASCADE,
+    price DECIMAL(10,2) NOT NULL,
+    price_date DATE NOT NULL,
+    CONSTRAINT unique_ingredient_date UNIQUE (ingredient_id, price_date)
+);
 
 
 

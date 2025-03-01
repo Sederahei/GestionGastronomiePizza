@@ -27,3 +27,30 @@ CREATE TABLE Dish_Ingredient
     unit              unit           NOT NULL,
     PRIMARY KEY (id_dish, id_ingredient)
 );
+
+
+CREATE TABLE ingredient_quantity (
+                                     id SERIAL PRIMARY KEY,
+                                     id_ingredient INTEGER NOT NULL REFERENCES Ingredient(id_ingredient) ON DELETE CASCADE,
+                                     required_quantity DECIMAL(10,2) NOT NULL,
+                                     unit unit NOT NULL
+);
+
+
+CREATE TABLE ingredient_prices (
+                                   id SERIAL PRIMARY KEY,
+                                   id_ingredient INTEGER NOT NULL REFERENCES Ingredient(id_ingredient) ON DELETE CASCADE,
+                                   price DOUBLE PRECISION NOT NULL,
+                                   price_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE stock_movement (
+                                id SERIAL PRIMARY KEY,
+                                id_ingredient INTEGER NOT NULL REFERENCES Ingredient(id_ingredient) ON DELETE CASCADE,
+                                movement_type VARCHAR(10) CHECK (movement_type IN ('ENTREE', 'SORTIE')) NOT NULL,
+                                quantity DECIMAL(10,2) NOT NULL,
+                                unit unit NOT NULL,
+                                movement_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+

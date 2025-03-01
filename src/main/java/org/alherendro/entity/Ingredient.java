@@ -1,6 +1,5 @@
 package org.alherendro.entity;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,7 +10,7 @@ public class Ingredient {
     private LocalDateTime updateDatetime;
     private double unitPrice;
     private Unit unit;
-    
+
 
     public Ingredient(int anInt, String name, double unitPrice, LocalDateTime updateDateTime, int unit) {
 
@@ -22,7 +21,14 @@ public class Ingredient {
         this.unit = Unit.values()[unit];
     }
 
+    public Ingredient(int ingredientId, String ingredientName, double unitPrice) {
 
+        this.id = ingredientId;
+        this.name = ingredientName;
+        this.unitPrice = unitPrice;
+
+
+    }
 
 
     public static void add(Ingredient ingredient) {
@@ -98,4 +104,7 @@ public class Ingredient {
     }
 
 
+    public List<Ingredient> findFilteredAndPaginated(Object o, Object o1, Object o2, Object o3, Object o4, Object o5, String id, boolean b, int i, int i1) {
+        return List.of();
+    }
 }

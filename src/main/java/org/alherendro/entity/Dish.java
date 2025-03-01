@@ -19,6 +19,18 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
+    public Dish(int id, String name, List<IngredientQuantity> ingredients) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredients;
+    }
+
+    public Dish(int idIngredient, int idDish, String name, double unitPrice) {
+        this.id = idDish;
+        this.name = name;
+        this.unitPrice = unitPrice;
+    }
+
     @Override
     public String toString() {
         return "Dish{" +
@@ -50,6 +62,7 @@ public class Dish {
     public double getUnitPrice() {    return unitPrice;    }
 
     public List<IngredientQuantity> getIngredients() {
+
         return ingredients;
     }
 
@@ -61,12 +74,33 @@ public class Dish {
     // Quesion N°4
 
     public double getIngredientCost() {
-        return ingredients.stream()
+        double sum = ingredients.stream()
                 .mapToDouble(iq -> iq.getIngredient().getUnitPrice() * iq.getRequiredQuantity())
                 .sum();
+        return sum;
     }
 
-    public Object hot_dog_const_ingredient_55000() {
-        return List.of(new IngredientQuantity(ingredients.get(0).getIngredient(), 1.0));
+
+    public double getCost() {
+        return getIngredientCost();
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    public Dish get() {
+        return this;
     }
 }

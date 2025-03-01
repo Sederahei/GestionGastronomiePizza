@@ -5,16 +5,32 @@ package org.alherendro.entity;
 
 public class IngredientQuantity {
 
-    private final Ingredient ingredient;
-    private final double requiredQuantity;
+    private  Ingredient ingredient;
+    private  int id;
+    private  double requiredQuantity;
 
-    public IngredientQuantity(Ingredient ingredient, double requiredQuantity) {
+
+    public IngredientQuantity(Ingredient ingredient, int id, double requiredQuantity) {
         this.ingredient = ingredient;
+        this.id = id;
         this.requiredQuantity = requiredQuantity;
     }
 
-    public Ingredient getIngredient() {
-        return ingredient;
+    public IngredientQuantity(Ingredient ingredient, double quantity) {
+        this.ingredient = ingredient;
+        this.requiredQuantity = quantity;
+    }
+    public IngredientQuantity() {
+
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getIngredient() {
+        return ingredient.getId();
     }
 
     public double getRequiredQuantity() {
