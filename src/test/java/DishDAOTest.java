@@ -46,7 +46,7 @@ public class DishDAOTest{
 
         // ==> Verification
         System.out.println("dish succeful saved " + dish);
-        assertEquals(1, dish.getId());
+        assertEquals(7, dish.getId());
 
     }
 

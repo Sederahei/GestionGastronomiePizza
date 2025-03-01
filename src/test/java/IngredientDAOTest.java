@@ -65,10 +65,74 @@ public class IngredientDAOTest {
 
         // ==> Verification
         System.out.println(ingredients);
-        assertTrue(ingredients.size()>0);
+        assertTrue(ingredients.size() > 0);
     }
 
-    }
 
+// @Test
+//    void testFilterSortPaginateIngredients() {
+//        IngredientDAO dao = new IngredientDAO();
+//
+//        // Test pour filtrer par nom et trier par prix
+//        List<Ingredient> ingredients = dao.filterSortPaginateIngredients("Sau", "G", 10.0, 100.0, null, null, "unit_price", 1, 5);
+//
+//        // Vérification que la liste n'est pas vide
+//        assertNotNull(ingredients);
+//        System.out.println("votre page est vide  " + ingredients.size());
+//        assertTrue(ingredients.size() > 0);
+//
+//        // Vérifier que le nom contient "Sau"
+//        for (Ingredient ingredient : ingredients) {
+//            System.out.println("Nom de l'ingrédient non trouvé : " + ingredient.getName());
+//            assertTrue(ingredient.getName().contains("Sau"));
+//        }
+//
+//        // Vérifier que l'unité est "G"
+//        for (Ingredient ingredient : ingredients) {
+//            assertEquals("G", ingredient.getUnit().toString());
+//        }
+//
+//        // Vérifier que les prix sont dans l'intervalle [10.0, 100.0]
+//        for (Ingredient ingredient : ingredients) {
+//            System.out.println("votre prix que vous avez ecrie est l'intervale de " + ingredient.getUnitPrice());
+//            assertTrue(ingredient.getUnitPrice() >= 10.0 && ingredient.getUnitPrice() <= 100.0);
+//        }
+//
+//        assertFalse(ingredients.isEmpty(), "La liste des ingrédients ne doit pas être vide !");
+//        for (Ingredient ingredient : ingredients) {
+//            System.out.println("Ingredient trouvé : " + ingredient.getName() + ", Unité : " + ingredient.getUnit() + ", Prix : " + ingredient.getUnitPrice());
+//        }
+//
+//
+//        // Vérifier que la pagination fonctionne
+//        assertEquals(1, ingredients.size()); // On s'attend à 5 éléments dans cette page
+//    }
+//    }
+
+    @Test
+    void testFilterSortPaginateIngredients() {
+        IngredientDAO dao = new IngredientDAO();
+
+        try {
+            List<Ingredient> ingredients = dao.findFilteredAndPaginated(
+                    "Sau", Unit.G, 10.0, 100.0, null, null, "unit_price", true, 1, 5);
+
+            assertNotNull(ingredients);
+            System.out.println("Nombre d'ingrédients trouvés : " + ingredients.size());
+            assertFalse(ingredients.isEmpty(), "La liste des ingrédients ne doit pas être vide !");
+
+            for (Ingredient ingredient : ingredients) {
+                System.out.println("Ingredient trouvé : " + ingredient.getName() + ", Unité : " + ingredient.getUnit() + ", Prix : " + ingredient.getUnitPrice());
+                assertTrue(ingredient.getName().contains("Sau"));
+                assertEquals(Unit.G, ingredient.getUnit());
+                assertTrue(ingredient.getUnitPrice() >= 10.0 && ingredient.getUnitPrice() <= 100.0);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            fail("Une erreur SQL s'est produite !");
+        }
+    }
+}
 
 

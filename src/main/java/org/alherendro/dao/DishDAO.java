@@ -92,6 +92,11 @@ public class DishDAO implements CrudOperationsDish<Dish> {
     }
 
     @Override
+    public List<Ingredient> filterSortPaginateIngredients(String sau, String g, double v, double v1, Object o, Object o1, String unitPrice, int i, int i1) {
+        return List.of();
+    }
+
+    @Override
     public Dish update(Dish entity) {
         String sql = "UPDATE dish SET name = ?, unit_price = ? WHERE id_dish = ?";
         try {
