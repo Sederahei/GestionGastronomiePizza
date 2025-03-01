@@ -25,11 +25,6 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
-    public Dish(int idIngredient, int idDish, String name, double unitPrice) {
-        this.id = idDish;
-        this.name = name;
-        this.unitPrice = unitPrice;
-    }
 
     @Override
     public String toString() {

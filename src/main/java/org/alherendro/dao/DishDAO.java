@@ -1,5 +1,4 @@
 package org.alherendro.dao;
-
 import org.alherendro.DataSource;
 import org.alherendro.Interface.CrudOperationsDish;
 import org.alherendro.entity.Dish;
@@ -17,8 +16,58 @@ import java.util.List;
 
 public class DishDAO implements CrudOperationsDish<Dish> {
 
+    public Dish findById(int id) {
+        String sql = "SELECT d.id_dish, d.name, di.id_ingredient, di.required_quantity, " +
+                "i.name AS ingredient_name, i.unit_price, i.unit " +
+                "FROM Dish d " +
+                "LEFT JOIN Dish_Ingredient di ON d.id_dish = di.id_dish " +
+                "LEFT JOIN Ingredient i ON di.id_ingredient = i.id_ingredient " +
+                "WHERE d.id_dish = ?";
+
+        try {
+            Connection connection = DataSource.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            Dish dish = null;
+            List<IngredientQuantity> ingredientQuantities = new ArrayList<>();
+
+            while (rs.next()) {
+                // Créer le plat seulement à la première itération
+                if (dish == null) {
+                    dish = new Dish(
+                            rs.getInt("id_dish"),
+                            rs.getString("name"),
+                            rs.getDouble("unit_price"),
+                            ingredientQuantities
+                    );
+                }
+
+                // Ajouter les ingrédients
+                Ingredient ingredient = new Ingredient(
+                        rs.getInt("id_ingredient"),
+                        rs.getString("ingredient_name"),
+                        rs.getDouble("unit_price"),
+                        Unit.valueOf(rs.getString("unit")) // Convertir correctement l'ENUM
+                );
+
+                IngredientQuantity ingredientQuantity = new IngredientQuantity(
+                        ingredient,
+                        rs.getDouble("required_quantity")
+                );
+
+                ingredientQuantities.add(ingredientQuantity);
+            }
+
+            return dish;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
-    public Dish save(Dish entity) {
+    public Dish save(Dish entity)                                 {
         String sql = "INSERT INTO dish (name, unit_price) VALUES (?, ?)";
         try {
             Connection connection = DataSource.getConnection();
@@ -35,31 +84,12 @@ public class DishDAO implements CrudOperationsDish<Dish> {
         }
     }
 
-    public  Dish findById(int id) {
-        String sql = "SELECT d.id_dish, d.name, di.id_ingredient, di.required_quantity, i.name AS ingredient_name, i.unit_price " +
-                "FROM Dish d " +
-                "LEFT JOIN Dish_Ingredient di ON d.id_dish = di.id_dish " +
-                "LEFT JOIN Ingredient i ON di.id_ingredient = i.id_ingredient " +
-                "WHERE d.id_dish = ?";
 
-        try {
-            Connection connection = DataSource.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            Dish dish = new Dish();
-            while (rs.next()) {
-                dish.setId(rs.getInt("id_dish"));
-                dish.setName(rs.getString("name"));
-                dish.setUnitPrice(rs.getDouble("unit_price"));
-            }
-            List<IngredientQuantity> ingredientQuantities = new ArrayList<>();
-            return new Dish(dish.getId(), dish.getName(), dish.getUnitPrice(), ingredientQuantities);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
+    @Override
+    public List<Ingredient> getAll() {
+        return List.of();
     }
-
 
     @Override
     public Dish update(Dish entity) {
@@ -98,32 +128,7 @@ public class DishDAO implements CrudOperationsDish<Dish> {
         }
         return entity;
     }
-
-
-    public List<Ingredient> getAll() {
-        String sql = "SELECT id_dish, name, unit_price FROM dish";
-        try {
-            Connection connection = DataSource.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.executeQuery();
-            ResultSet rs = stmt.executeQuery();
-            List<Dish> dishes = new ArrayList<>();
-            while (rs.next()) {
-                dishes.add(new Dish(
-                        rs.getInt("id_dish"),
-                        rs.getString("name"),
-                        rs.getDouble("unit_price")
-                ));
-            }
-            List<Ingredient> ingredients = new ArrayList<>();
-            return ingredients;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 }
-
 //  public Dish findDishById(int dishId) throws SQLException {
 //        String dishQuery = "SELECT * FROM dish WHERE id_dish = ?";
 //        String ingredientQuery = "SELECT i.id_ingredient, i.name, i.price, i.unit, di.required_quantity " +

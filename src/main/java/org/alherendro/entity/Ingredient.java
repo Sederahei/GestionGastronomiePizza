@@ -30,6 +30,14 @@ public class Ingredient {
 
     }
 
+    public Ingredient(int idIngredient, String ingredientName, double unitPrice, Unit unit) {
+
+        this.id = idIngredient;
+        this.name = ingredientName;
+        this.unitPrice = unitPrice;
+        this.unit = unit;
+    }
+
 
     public static void add(Ingredient ingredient) {
 

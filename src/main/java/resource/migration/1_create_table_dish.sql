@@ -29,6 +29,9 @@ CREATE TABLE Dish_Ingredient
 );
 
 
+
+
+
 CREATE TABLE ingredient_quantity (
                                      id SERIAL PRIMARY KEY,
                                      id_ingredient INTEGER NOT NULL REFERENCES Ingredient(id_ingredient) ON DELETE CASCADE,

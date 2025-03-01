@@ -1,9 +1,6 @@
 import org.alherendro.dao.DishDAO;
 import org.alherendro.entity.Dish;
-import org.alherendro.entity.Ingredient;
-import org.alherendro.entity.IngredientQuantity;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,7 +22,7 @@ public class DishDAOTest{
 
         // ==> Preparation
         DishDAO dishDAO = new DishDAO();
-        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
+        Dish dish = new Dish(1, "hot dog", 15000, List.of());
 
         // ==> Execution
         dishDAO.findById(1);
@@ -42,18 +39,18 @@ public class DishDAOTest{
 
         // ==> Preparation
         DishDAO dishDAO = new DishDAO();
-        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
+        Dish dish = new Dish(7, "Tsaramaso", 10000.0, List.of());
 
         // ==> Execution
         dishDAO.save(dish);
 
         // ==> Verification
-        System.out.println(dish);
+        System.out.println("dish succeful saved " + dish);
         assertEquals(1, dish.getId());
 
     }
 
-
+//
     @Test
     void
     update_dish_ok()  {
@@ -72,42 +69,40 @@ public class DishDAOTest{
 
 
     }
+// manimba zavatra dia natao anaty Com's (DELETE)
+    //    @Test
+    //    void delete_dish_ok() {
+    //
+    //        // ==> Preparation
+    //        DishDAO dishDAO = new DishDAO();
+    //        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
+    //
+    //        // ==> Execution
+    //        dishDAO.delete(dish);
+    //
+    //        // ==> Verification
+    //        System.out.println(dish);
+    //        assertEquals(1, dish.getId());
+    //    }
 
-    @Test
-    void delete_dish_ok() {
-
-        // ==> Preparation
-        DishDAO dishDAO = new DishDAO();
-        Dish dish = new Dish(1, "Hot dog", 15000.0, List.of());
-
-        // ==> Execution
-        dishDAO.delete(dish);
-
-        // ==> Verification
-        System.out.println(dish);
-        assertEquals(1, dish.getId());
-    }
 
 
     @Test
     void calculate_total_ingredient_cost_for_hot_dog() {
-        // ==> Preparation( give)
-        Ingredient ingredient = new Ingredient();
-        IngredientQuantity ingredientQuantity = new IngredientQuantity(ingredient, 100);
-        
-        List<IngredientQuantity> ingredients = List.of(ingredientQuantity);
-        DishDAO  dishDAO = new DishDAO(); // objet
-        Dish dish = dishDAO.findById(1);
+        // ==> Préparation (Given)
+        DishDAO dishDAO = new DishDAO();
+        Dish dish = dishDAO.findById(1);  // Récupère le plat avec ses ingrédients
 
-        // ==> Execution
+        // ==> Exécution (When)
         double cost = dish.getCost();
 
-        // ==> Verification
+        // ==> Vérification (Then)
         System.out.println("Total cost: " + cost);
-        assertEquals(cost, 5500.0);
-        
+        assertEquals(5500.0, cost, 0.01);  // Permet une petite marge d'erreur
     }
 
-
 }
+
+
+
 
