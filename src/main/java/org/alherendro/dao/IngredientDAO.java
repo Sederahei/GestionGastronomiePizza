@@ -185,7 +185,7 @@ public class IngredientDAO implements CrudOperationsDish<Ingredient> {
 
             // Ajout des filtres dynamiques
             if (name != null) sql.append(" AND name ILIKE ? ");
-            if (unit != null) sql.append(" AND unit = ?::unit "); // Cast explicite en ENUM
+            if (unit != null) sql.append(" AND unit = ?::unit ");
             if (minPrice != null) sql.append(" AND unit_price >= ? ");
             if (maxPrice != null) sql.append(" AND unit_price <= ? ");
             if (minDate != null) sql.append(" AND update_datetime >= ? ");
@@ -206,7 +206,7 @@ public class IngredientDAO implements CrudOperationsDish<Ingredient> {
 
                 // Remplissage des paramètres dynamiques
                 if (name != null) stmt.setString(index++, "%" + name + "%");
-                if (unit != null) stmt.setObject(index++, unit.name(), Types.OTHER); // Correct pour PostgreSQL ENUM
+                if (unit != null) stmt.setObject(index++, unit.name(), Types.OTHER);
                 if (minPrice != null) stmt.setDouble(index++, minPrice);
                 if (maxPrice != null) stmt.setDouble(index++, maxPrice);
                 if (minDate != null) stmt.setTimestamp(index++, minDate);

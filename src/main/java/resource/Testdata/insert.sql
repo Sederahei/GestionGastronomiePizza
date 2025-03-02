@@ -77,3 +77,15 @@ WHERE id_ingredient IN (SELECT id_ingredient
                         FROM ingredient
                         ORDER BY id_ingredient
                         OFFSET 4);
+
+MISE A JOUR pour le istorique de prix(question 7)
+
+UPDATE Ingredient
+SET unit_price = 2500, update_datetime = '2025-03-01 12:00:00'
+WHERE id_ingredient = 1;
+
+Insertion de mise a joour :
+          INSERT INTO Ingredient (id_ingredient, name, update_datetime, unit_price, unit)
+VALUES
+(1, 'Saucisse', '2025-03-01 00:00:00', 2500, 'G'),
+(1, 'Saucisse', '2025-03-01 12:00:00', 3000, 'G');

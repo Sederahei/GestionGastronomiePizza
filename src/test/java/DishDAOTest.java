@@ -1,8 +1,12 @@
 import org.alherendro.dao.DishDAO;
 import org.alherendro.entity.Dish;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DishDAOTest{
 // @Test
@@ -88,18 +92,26 @@ public class DishDAOTest{
 
 
     @Test
-    void calculate_total_ingredient_cost_for_hot_dog() {
-        // ==> Préparation (Given)
-        DishDAO dishDAO = new DishDAO();
-        Dish dish = dishDAO.findById(1);  // Récupère le plat avec ses ingrédients
+    void testGetIngredientsCost() throws SQLException {
+        Dish dish = new Dish(1, "HotDog", 6000.0); // Prix de vente fixé
 
-        // ==> Exécution (When)
-        double cost = dish.getCost();
+        // Vérifier avec la date actuelle (dernier prix)
+        double costToday = dish.getIngredientsCost(LocalDate.now());
+        assertEquals(5500.0, costToday, 0.1);
 
-        // ==> Vérification (Then)
-        System.out.println("Total cost: " + cost);
-        assertEquals(5500.0, cost, 0.01);  // Permet une petite marge d'erreur
+        // Vérifier avec une date antérieure
+        double costBefore = dish.getIngredientsCost(LocalDate.of(2025, 1, 1));
+        assertTrue(costBefore < costToday);
+
+        // Vérifier avec une date future
+        double costAfter = dish.getIngredientsCost(LocalDate.of(2025, 3, 1));
+        assertTrue(costAfter > costToday);
+
+        System.out.println("Coût aujourd'hui: " + costToday);
+        System.out.println("Coût au 1er janvier: " + costBefore);
+        System.out.println("Coût au 1er mars: " + costAfter);
     }
+
 
 }
 

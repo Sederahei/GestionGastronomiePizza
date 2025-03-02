@@ -2,10 +2,10 @@ import org.alherendro.DataSource;
 import org.alherendro.dao.IngredientDAO;
 import org.alherendro.entity.Dish;
 import org.alherendro.entity.Ingredient;
-import org.alherendro.entity.IngredientQuantity;
 import org.alherendro.entity.Unit;
 import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -133,6 +133,28 @@ public class IngredientDAOTest {
             fail("Une erreur SQL s'est produite !");
         }
     }
+
+
+    @Test
+    void testGetIngredientsCost() throws SQLException {
+        Dish dish = new Dish(1, "HotDog", 6000.0); // Prix de vente fixé
+
+        // Vérifier avec la date actuelle (dernier prix)
+        double costToday = dish.getIngredientsCost(LocalDate.now());
+        assertEquals(5500.0, costToday, 0.1);
+
+        // Vérifier avec une date antérieure
+        double costBefore = dish.getIngredientsCost(LocalDate.of(2025, 1, 1));
+        assertTrue(costBefore < costToday);
+        System.out.println("Prix récupéré : " + costBefore);
+
+        // Vérifier avec une date future
+        costBefore = dish.getIngredientsCost(LocalDate.of(2024, 1, 1));
+        assertTrue(costBefore > costToday);
+        System.out.println("Prix récupéré : " + costBefore);
+    }
+
+
 }
 
 
