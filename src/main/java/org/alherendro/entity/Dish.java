@@ -57,27 +57,31 @@ public class Dish {
     public double getIngredientsCost(LocalDate date) throws SQLException {
         double totalCost = 0.0;
 
-        String sql = "SELECT i.unit_price AS ingredient_price " +
+        // Requête SQL pour récupérer le coût des ingrédients à une date donnée
+        String sql = "SELECT SUM(latest_prices.price * di.required_quantity) AS total_cost " +
                 "FROM Dish d " +
                 "JOIN Dish_Ingredient di ON d.id_dish = di.id_dish " +
-                "JOIN Ingredient_Price_History iph ON di.id_ingredient = iph.id_ingredient " +
+                "JOIN ( " +
+                "    SELECT DISTINCT ON (iph.id_ingredient) iph.id_ingredient, iph.price " +
+                "    FROM Ingredient_Price_History iph " +
+                "    WHERE iph.update_date <= ? " +  // Sélectionner les prix avant ou égaux à la date
+                "    ORDER BY iph.id_ingredient, iph.update_date DESC " +
+                ") AS latest_prices ON di.id_ingredient = latest_prices.id_ingredient " +
                 "WHERE d.id_dish = ? " +
-                "AND iph.update_date <= ? " +
-                "ORDER BY iph.update_date DESC LIMIT 1";
+                "GROUP BY d.id_dish;";
 
         try (Connection connection = DataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setInt(1, this.id);  // Dish ID
-            stmt.setDate(2, Date.valueOf(date));  // Date
+            stmt.setDate(1, Date.valueOf(date));  // Paramétrer la date d'ingrédient
+            stmt.setInt(2, this.id);  // ID du plat
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                double price = rs.getDouble("ingredient_price");
-                totalCost += price;
+                totalCost = rs.getDouble("total_cost");  // Récupérer le coût total
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e);  // Gestion des erreurs SQL
         }
 
         return totalCost;
