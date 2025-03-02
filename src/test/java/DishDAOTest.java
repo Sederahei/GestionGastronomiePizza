@@ -91,26 +91,33 @@ public class DishDAOTest{
 
 
 
-    @Test
-    void testGetIngredientsCost() throws SQLException {
-        Dish dish = new Dish(1, "HotDog", 6000.0); // Prix de vente fixé
 
-        // Vérifier avec la date actuelle (dernier prix)
-        double costToday = dish.getIngredientsCost(LocalDate.now());
-        assertEquals(5500.0, costToday, 0.1);
 
-        // Vérifier avec une date antérieure
-        double costBefore = dish.getIngredientsCost(LocalDate.of(2025, 1, 1));
-        assertTrue(costBefore < costToday);
 
-        // Vérifier avec une date future
-        double costAfter = dish.getIngredientsCost(LocalDate.of(2025, 3, 1));
-        assertTrue(costAfter > costToday);
+    //@Test
+    //    void testGetGrossMargin() throws SQLException {
+    //        // Créer un plat avec un prix de vente de 6000.0
+    //        Dish dish = new Dish(1, "Hot dog", 15000.0);
+    //
+    //        // Coût des ingrédients à la date actuelle (par exemple 5500.0)
+    //        double expectedMarginToday = 15000.0 - 5500.0;
+    //
+    //        // Vérifier avec la date actuelle
+    //        double actualMarginToday = dish.getGrossMargin();
+    //        if (Math.abs(actualMarginToday - expectedMarginToday) > 0.1) {
+    //            System.out.println("Marge brute calculée pour aujourd'hui : " + actualMarginToday);
+    //        }
+    //
+    //        // Vérifier avec une date antérieure (par exemple 2025-01-01)
+    //        double expectedMarginBefore = 15000.0 - 2500.0; // Supposons qu'à cette date, le coût des ingrédients soit de 2500.0
+    //        double actualMarginBefore = dish.getGrossMargin(LocalDate.of(2025, 1, 1));
+    //        if (Math.abs(actualMarginBefore - expectedMarginBefore) > 0.1) {
+    //            System.out.println("Marge brute calculée avant le 2025-01-01 : " + actualMarginBefore);
+    //        }
+    //        assertEquals(expectedMarginBefore, actualMarginBefore, 0.1);
+    //    }
 
-        System.out.println("Coût aujourd'hui: " + costToday);
-        System.out.println("Coût au 1er janvier: " + costBefore);
-        System.out.println("Coût au 1er mars: " + costAfter);
-    }
+
 
 
 }

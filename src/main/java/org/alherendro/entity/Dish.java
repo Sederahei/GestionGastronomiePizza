@@ -39,6 +39,27 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    // Cette méthode permet de récupérer les coûts des ingrédients au jour d'aujourd'hui
+    private double getIngredientCost() throws SQLException {
+        return getIngredientsCost(LocalDate.now());
+    }
+
+    public Dish get() {
+        return this;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
     public String getName() {
         return name;
     }
@@ -52,8 +73,8 @@ public class Dish {
     public int getId() {
         return id;
     }
-
     // Question N°4: Méthode mise à jour pour récupérer le coût des ingrédients à une date spécifique
+
     public double getIngredientsCost(LocalDate date) throws SQLException {
         double totalCost = 0.0;
 
@@ -76,36 +97,23 @@ public class Dish {
             stmt.setDate(1, Date.valueOf(date));  // Paramétrer la date d'ingrédient
             stmt.setInt(2, this.id);  // ID du plat
 
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                totalCost = rs.getDouble("total_cost");  // Récupérer le coût total
+            // Exécution de la requête
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    totalCost = rs.getDouble("total_cost");  // Récupérer le coût total
+                } else {
+                    System.out.println("Aucun coût trouvé pour les ingrédients à cette date.");
+                }
             }
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);  // Gestion des erreurs SQL
+            e.printStackTrace();  // Affichage de l'exception pour le débogage
+            throw new RuntimeException("Erreur lors de la récupération du coût des ingrédients", e);  // Gestion des erreurs SQL
         }
 
         return totalCost;
     }
 
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    // Cette méthode permet de récupérer les coûts des ingrédients au jour d'aujourd'hui
-    private double getIngredientCost() throws SQLException {
-        return getIngredientsCost(LocalDate.now());
-    }
-
-    public Dish get() {
-        return this;
-    }
-
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
 }

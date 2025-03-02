@@ -89,3 +89,6 @@ Insertion de mise a joour :
 VALUES
 (1, 'Saucisse', '2025-03-01 00:00:00', 2500, 'G'),
 (1, 'Saucisse', '2025-03-01 12:00:00', 3000, 'G');
+
+     //     ==> commande pour metre l id recomnce en 1
+ALTER SEQUENCE public.ingredient_price_history_id_seq RESTART WITH 1;
