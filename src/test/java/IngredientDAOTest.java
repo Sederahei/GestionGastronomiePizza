@@ -135,23 +135,22 @@ public class IngredientDAOTest {
     }
 
 
+
+
     @Test
     void testGetIngredientsCost() throws SQLException {
-        Dish dish = new Dish(1, "Hot dog", 15000.0); // Prix de vente fixé
+        Dish dish = new Dish(1, "Hot dog", 15000.0);
 
-        // Vérifier avec la date actuelle (dernier prix)
-        double costToday = dish.getIngredientsCost(LocalDate.now());
-        assertTrue(costToday > 0, "Le coût des ingrédients aujourd'hui devrait être supérieur à 0");
-
-        // Vérifier avec une date antérieure
+        // Coût avant la modification des prix des ingrédients
         double costBefore = dish.getIngredientsCost(LocalDate.of(2025, 1, 1));
-        assertTrue(costBefore < costToday, "Le coût des ingrédients avant la date d'aujourd'hui doit être inférieur");
-        System.out.println("Coût aujourd'hui: " + costToday);
-        System.out.println("Coût au 1er janvier: " + costBefore);
+        assertEquals(5500.0, costBefore, "Le coût doit être 5500");
 
+        System.out.println("Coût des ingredients au 1er janvier: " + costBefore);
+
+        // Modification des prix des ingrédients dans la base et récupération du coût à une autre date
+        double costAfter = dish.getIngredientsCost(LocalDate.of(2025, 2, 15));
+        System.out.println("Coût après mise à jour des prix: " + costAfter);
     }
-
-
 
 }
 

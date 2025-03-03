@@ -28,7 +28,7 @@ public class StockMovementDAO {
                         rs.getString("movement_type"),
                         rs.getDouble("quantity"),
                         rs.getString("unit"),
-                        rs.getTimestamp("movement_datetime").toLocalDateTime()
+                        rs.getTimestamp("movement_date").toLocalDateTime()
                 );
                 movements.add(movement);
             }

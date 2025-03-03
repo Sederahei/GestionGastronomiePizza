@@ -11,6 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+
 class StockMovementDAOTest {
 
     private StockMovementDAO stockMovementDAO;
@@ -23,9 +24,7 @@ class StockMovementDAOTest {
 
             String sql = """
                 INSERT INTO stock_movement (id,id_ingredient, movement_type, quantity, unit, movement_datetime)
-                VALUES 
-    
-    
+                VALUES   
                 (1, 'ENTREE', 10000, 'G', '2025-02-01 08:00:00'),
                 (2, 'ENTREE', 20, 'L', '2025-02-01 08:00:00'),
                 (3, 'ENTREE', 100, 'U', '2025-02-01 08:00:00'),
@@ -55,4 +54,8 @@ class StockMovementDAOTest {
         assertEquals(LocalDateTime.of(2025, 2, 1, 8, 0), firstMovement.getMovementDate());
     }
 }
+
+
+
+
 

@@ -76,29 +76,35 @@ public class Dish {
     public int getId() {
         return id;
     }
+
+
     // Question N°4: Méthode mise à jour pour récupérer le coût des ingrédients à une date spécifique
 
     public double getIngredientsCost(LocalDate date) throws SQLException {
         double totalCost = 0.0;
 
         // Requête SQL pour récupérer le coût des ingrédients à une date donnée
-        String sql = "SELECT SUM(latest_prices.price * di.required_quantity) AS total_cost " +
-                "FROM Dish d " +
-                "JOIN Dish_Ingredient di ON d.id_dish = di.id_dish " +
-                "JOIN ( " +
-                "    SELECT DISTINCT ON (iph.id_ingredient) iph.id_ingredient, iph.price " +
-                "    FROM Ingredient_Price_History iph " +
-                "    WHERE iph.update_date <= ? " +
-                "    ORDER BY iph.id_ingredient, iph.update_date DESC " +
-                ") AS latest_prices ON di.id_ingredient = latest_prices.id_ingredient " +
-                "WHERE d.id_dish = ? " +
+        String sql = "SELECT SUM(latest_prices.price * di.required_quantity) AS total_cost\n" +
+                "FROM Dish d\n" +
+                "JOIN Dish_Ingredient di ON d.id_dish = di.id_dish\n" +
+                "JOIN (\n" +
+                "    SELECT iph.id_ingredient, iph.price\n" +
+                "    FROM Ingredient_Price_History iph\n" +
+                "    WHERE iph.update_date = (\n" +
+                "        SELECT MAX(update_date)\n" +
+                "        FROM Ingredient_Price_History\n" +
+                "        WHERE id_ingredient = iph.id_ingredient\n" +
+                "        AND update_date <= ?\n" + // Utiliser un paramètre pour la date
+                "    )\n" +
+                ") AS latest_prices ON di.id_ingredient = latest_prices.id_ingredient\n" +
+                "WHERE d.id_dish = ?\n" +  // Utiliser un paramètre pour l'ID du plat
                 "GROUP BY d.id_dish;";
 
         try (Connection connection = DataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            stmt.setDate(1, Date.valueOf(date));  // Paramétrer la date d'ingrédient
-            stmt.setInt(2, this.id);  // ID du plat
+            stmt.setDate(1, Date.valueOf(date));  // Paramétrer la date
+            stmt.setInt(2, this.id);  // Paramétrer l'ID du plat
 
             // Exécution de la requête
             try (ResultSet rs = stmt.executeQuery()) {
@@ -116,6 +122,7 @@ public class Dish {
 
         return totalCost;
     }
+
 
     public Double getGrossMargin() throws SQLException {
         return getGrossMargin(LocalDate.now());  // Par défaut, calculer la marge brute avec la date d'aujourd'hui
