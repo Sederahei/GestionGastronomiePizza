@@ -62,7 +62,8 @@ CREATE TABLE Ingredient_Price_History
 
 
 SELECT * FROM Ingredient_Price_History ORDER BY id_ingredient, update_date
-INSERT INTO Ingredient_Price_History (id_ingredient, price, update_date) VALUES (1, 200.0, '2025-01-01'), (1, 220.0, '2025-02-15'), (2, 50.0, '2025-01-10'), (2, 55.0, '2025-02-20');
+INSERT INTO Ingredient_Price_History (id_ingredient, price, update_date) VALUES
+    (1, 200.0, '2025-01-01'), (1, 220.0, '2025-02-15'), (2, 50.0, '2025-01-10'), (2, 55.0, '2025-02-20');
 
 
 

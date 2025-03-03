@@ -131,6 +131,8 @@ public class DishDAO implements CrudOperationsDish<Dish> {
         }
         return entity;
     }
+
+
 }
 //  public Dish findDishById(int dishId) throws SQLException {
 //        String dishQuery = "SELECT * FROM dish WHERE id_dish = ?";
