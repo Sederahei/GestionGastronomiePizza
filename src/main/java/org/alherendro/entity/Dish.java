@@ -11,7 +11,8 @@ public class Dish {
     private double unitPrice;
     private List<IngredientQuantity> ingredients;
 
-    public Dish() {}
+    public Dish() {
+    }
 
     public Dish(int id, String name, double unitPrice, List<IngredientQuantity> ingredients) {
         this.id = id;
@@ -64,7 +65,9 @@ public class Dish {
         return name;
     }
 
-    public double getUnitPrice() { return unitPrice; }
+    public double getUnitPrice() {
+        return unitPrice;
+    }
 
     public List<IngredientQuantity> getIngredients() {
         return ingredients;
@@ -85,7 +88,7 @@ public class Dish {
                 "JOIN ( " +
                 "    SELECT DISTINCT ON (iph.id_ingredient) iph.id_ingredient, iph.price " +
                 "    FROM Ingredient_Price_History iph " +
-                "    WHERE iph.update_date <= ? " +  // Sélectionner les prix avant ou égaux à la date
+                "    WHERE iph.update_date <= ? " +
                 "    ORDER BY iph.id_ingredient, iph.update_date DESC " +
                 ") AS latest_prices ON di.id_ingredient = latest_prices.id_ingredient " +
                 "WHERE d.id_dish = ? " +
@@ -107,13 +110,23 @@ public class Dish {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();  // Affichage de l'exception pour le débogage
+            e.printStackTrace();
             throw new RuntimeException("Erreur lors de la récupération du coût des ingrédients", e);  // Gestion des erreurs SQL
         }
 
         return totalCost;
     }
 
+    public Double getGrossMargin() throws SQLException {
+        return getGrossMargin(LocalDate.now());  // Par défaut, calculer la marge brute avec la date d'aujourd'hui
+    }
 
+    public Double getGrossMargin(LocalDate date) throws SQLException {
+        // Calcul du coût des ingrédients à une date donnée
+        double ingredientsCost = getIngredientsCost(date);
 
+        // Retourner la marge brute : prix de vente unitaire - coût des ingrédients
+        return this.unitPrice - ingredientsCost;
+
+    }
 }

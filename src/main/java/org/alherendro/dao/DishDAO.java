@@ -159,7 +159,7 @@ public class DishDAO implements CrudOperationsDish<Dish> {
 //                    );
 //                    double quantity = ingRs.getDouble("required_quantity");
 //                    ingredientQuantities.add(new IngredientQuantity(ingredient, quantity));
-//                }
+//
 //
 //                return new Dish(dishId, name, price, ingredientQuantities);
 //

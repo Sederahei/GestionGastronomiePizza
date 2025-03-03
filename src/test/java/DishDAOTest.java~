@@ -137,7 +137,7 @@ public class DishDAOTest{
         // Afficher les résultats pour la vérification
         System.out.println("Marge brute aujourd'hui: " + marginToday);
         System.out.println("Marge brute au 1er janvier: " + marginBefore);
-        System.out.println("Marge brute au 1er fevrier: " + marginAfter);
+        System.out.println("Marge brute au 1er fevrie: " + marginAfter);
     }
 
 
