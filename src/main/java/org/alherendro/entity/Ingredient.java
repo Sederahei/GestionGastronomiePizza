@@ -115,4 +115,8 @@ public class Ingredient {
     public List<Ingredient> findFilteredAndPaginated(Object o, Object o1, Object o2, Object o3, Object o4, Object o5, String id, boolean b, int i, int i1) {
         return List.of();
     }
+
+    public Ingredient getIngredientById(int i) {
+        return null;
+    }
 }

@@ -1,8 +1,11 @@
 package org.alherendro.entity;
 import org.alherendro.DataSource;
+import org.alherendro.dao.StockMovementDAO;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Dish {
@@ -133,7 +136,4 @@ public class Dish {
     public Double getGrossMargin() throws SQLException {
         return getGrossMargin(LocalDate.now());
     }
-
-
-
 }

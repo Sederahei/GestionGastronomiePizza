@@ -1,5 +1,6 @@
 package org.alherendro.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class StockMovement {
@@ -17,6 +18,19 @@ public class StockMovement {
         this.quantity = quantity;
         this.unit = unit;
         this.movementDate = movementDate;
+    }
+
+    public StockMovement(int id, int idIngredient, String movementType, BigDecimal quantity, Unit unit, LocalDateTime movementDatetime) {
+        this.id = id;
+        this.ingredientId = idIngredient;
+        this.movementType = movementType;
+        this.quantity = quantity.doubleValue();
+        this.unit = unit;
+        this.movementDate = movementDatetime;
+
+    }
+    public StockMovement() {
+
     }
 
     public int getId() {
@@ -87,6 +101,7 @@ public class StockMovement {
                 ", movementDate=" + movementDate +
                 '}';
     }
+
 
 }
 

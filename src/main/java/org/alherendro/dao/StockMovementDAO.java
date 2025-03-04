@@ -5,6 +5,7 @@ import org.alherendro.Interface.StockMovementRepository;
 import org.alherendro.entity.StockMovement;
 import org.alherendro.entity.Unit;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,25 +19,6 @@ public class StockMovementDAO implements StockMovementRepository {
     private final Connection connection = DataSource.getConnection();
 
     public StockMovementDAO(Connection connection) throws SQLException {
-    }
-
-    @Override
-    public void addStockMovement(StockMovement stockMovement) throws SQLException {
-        String sql = "INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, stockMovement.getIngredientId());
-            stmt.setString(2, stockMovement.getMovementType());
-            stmt.setDouble(3, stockMovement.getQuantity());
-            stmt.setString(4, stockMovement.getUnit().name());
-            stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
-            stmt.executeUpdate();
-
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    stockMovement.setId(generatedKeys.getInt(1));
-                }
-            }
-        }
     }
 
     @Override
@@ -97,4 +79,55 @@ public class StockMovementDAO implements StockMovementRepository {
         LocalDateTime movementDate = rs.getTimestamp("movement_datetime").toLocalDateTime();
         return new StockMovement(id, ingredientId, movementType, quantity, unit, movementDate);
     }
+
+
+
+
+
+    public double getAvailableQuantity(int ingredientId, LocalDateTime date) {
+        String query = "SELECT SUM(quantity) FROM stock_movement " +
+                "WHERE id_ingredient = ? AND movement_datetime <= ? " +
+                "GROUP BY id_ingredient";
+
+        try (Connection conn = DataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, ingredientId);
+            stmt.setTimestamp(2, Timestamp.valueOf(date));
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble(1);  // Renvoie la somme des quantités
+            } else {
+                return 0.0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération de l'état du stock", e);
+        }
+    }
+
+
+    public void addStockMovement(StockMovement stockMovement) {
+        String query = "INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, stockMovement.getIngredientId());
+            stmt.setString(2, stockMovement.getMovementType());
+            stmt.setDouble(3, stockMovement.getQuantity());
+            stmt.setString(4, stockMovement.getUnit().name());
+            stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de l'ajout du mouvement de stock", e);
+        }
+    }
+
+
 }
+
+
+

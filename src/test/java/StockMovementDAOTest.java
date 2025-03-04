@@ -1,9 +1,12 @@
 import org.alherendro.DataSource;
+import org.alherendro.dao.IngredientDAO;
 import org.alherendro.dao.StockMovementDAO;
+import org.alherendro.entity.Ingredient;
 import org.alherendro.entity.StockMovement;
 import org.alherendro.entity.Unit; // Ajouter l'import de l'Enum Unit
 import org.junit.jupiter.api.*;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -77,5 +80,41 @@ class StockMovementDAOTest {
         List<StockMovement> movements = stockMovementDAO.getAllStockMovements();
         assertNotNull(movements);
         assertTrue(movements.size() >= 0);
+
+
     }
+
+
+
+    @Test
+    public void testGetAvailableQuantity() {
+
+        int ingredientId = 1;
+        LocalDateTime testDate = LocalDateTime.of(2025, 2, 24, 0, 0, 0, 0);
+
+
+        double expectedQuantity = 10000.00;
+
+        double availableQuantity = stockMovementDAO.getAvailableQuantity(ingredientId, testDate);
+        System.out.println( "availableQuantity = " + availableQuantity);
+        assertEquals(expectedQuantity, availableQuantity, 0.01);
+    }
+
+    @Test
+    public void testAddStockMovement() {
+
+        StockMovement stockMovement = new StockMovement(0, 1, "ENTREE", 5000.00, Unit.G, LocalDateTime.of(2025, 3, 1, 10, 0, 0, 0));
+
+
+        stockMovementDAO.addStockMovement(stockMovement);
+        double availableQuantity = getAvailableQuantity(1, LocalDateTime.of(2025, 3, 1, 10, 0, 0, 0));
+        assertEquals(5000.00, availableQuantity, 0.01); // 10 000 g + 5000 g => 15 000 g
+    }
+
+    private double getAvailableQuantity(int i, LocalDateTime dateTime) {
+        return 0;
+    }
+
+
+
 }

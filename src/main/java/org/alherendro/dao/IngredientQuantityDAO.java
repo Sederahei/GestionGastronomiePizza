@@ -4,10 +4,8 @@ import org.alherendro.DataSource;
 import org.alherendro.Interface.CrudOperationIngredientQuantity;
 import org.alherendro.entity.IngredientQuantity;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,5 +42,29 @@ public class IngredientQuantityDAO implements CrudOperationIngredientQuantity<In
 
 
     }
+
+
+    public double getAvailableQuantity(int ingredientId, LocalDateTime date) {
+        String query = "SELECT SUM(quantity) FROM stock_movement " +
+                "WHERE id_ingredient = ? AND movement_datetime <= ? " +
+                "GROUP BY id_ingredient";
+
+        try (Connection conn = DataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, ingredientId);
+            stmt.setTimestamp(2, Timestamp.valueOf(date));
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble(1);
+            } else {
+                return 0.0; // Aucun mouvement trouvé
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération de l'état du stock", e);
+        }
+    }
+
 
 }
