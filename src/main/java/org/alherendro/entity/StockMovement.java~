@@ -73,7 +73,7 @@ public class StockMovement {
         this.quantity = quantity;
         this.movementType = movementType;
         this.ingredientId = ingredientId;
-        this.unit = unit;
+        
     }
 
     @Override
