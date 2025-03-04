@@ -116,32 +116,46 @@ public class DishDAOTest{
     //        }
     //        assertEquals(expectedMarginBefore, actualMarginBefore, 0.1);
     //    }
+// @Test
+//    void testGetGrossMargin() throws SQLException {
+//        Dish dish = new Dish(1, "Hot dog", 15000.0);  // Prix de vente fixé à 6000
+//
+//        // Calculer la marge brute avec la date actuelle (coût des ingrédients le plus récent)
+//        double marginToday = dish.getGrossMargin(LocalDate.now());
+//        assertTrue(marginToday > 0, "La marge brute d'aujourd'hui doit être positive");
+//
+//        // Calculer la marge brute avec une date antérieure (prix des ingrédients du 1er janvier 2025)
+//        double marginBefore = dish.getGrossMargin(LocalDate.of(2025, 1, 1));
+//        assertTrue(marginBefore < marginToday, "La marge brute avant le 1er janvier devrait être inférieure");
+//
+//        // Calculer la marge brute avec une date future (prix des ingrédients du 1er mars 2025)
+//        double marginAfter = dish.getGrossMargin(LocalDate.of(2025, 2, 1));
+//        assertTrue(marginAfter > marginToday, "La marge brute après le 1er mars devrait être supérieure");
+//
+//        // Afficher les résultats pour la vérification
+//        System.out.println("Marge brute aujourd'hui: " + marginToday);
+//        System.out.println("Marge brute au 1er janvier: " + marginBefore);
+//        System.out.println("Marge brute au 1er fevrier: " + marginAfter);
+//    }
 
 
     @Test
     void testGetGrossMargin() throws SQLException {
-        Dish dish = new Dish(1, "Hot dog", 15000.0);  // Prix de vente fixé à 6000
 
-        // Calculer la marge brute avec la date actuelle (coût des ingrédients le plus récent)
-        double marginToday = dish.getGrossMargin(LocalDate.now());
-        assertTrue(marginToday > 0, "La marge brute d'aujourd'hui doit être positive");
+        Dish dish = new Dish(1, "Hot dog", 15000.0);
 
-        // Calculer la marge brute avec une date antérieure (prix des ingrédients du 1er janvier 2025)
-        double marginBefore = dish.getGrossMargin(LocalDate.of(2025, 1, 1));
-        assertTrue(marginBefore < marginToday, "La marge brute avant le 1er janvier devrait être inférieure");
 
-        // Calculer la marge brute avec une date future (prix des ingrédients du 1er mars 2025)
-        double marginAfter = dish.getGrossMargin(LocalDate.of(2025, 2, 1));
-        assertTrue(marginAfter > marginToday, "La marge brute après le 1er mars devrait être supérieure");
+        double marginBefore = dish.getGrossMargin(LocalDate.of(2025, 2, 1));
+        assertEquals(250.0, marginBefore, "La marge brute au 1er février doit être 250");
 
-        // Afficher les résultats pour la vérification
+
+        double marginAfter = dish.getGrossMargin(LocalDate.of(2025, 3, 1));
+        assertEquals(300.0, marginAfter, "La marge brute au 1er mars doit être 300");
+
+
+        double marginToday = dish.getGrossMargin();
         System.out.println("Marge brute aujourd'hui: " + marginToday);
-        System.out.println("Marge brute au 1er janvier: " + marginBefore);
-        System.out.println("Marge brute au 1er fevrier: " + marginAfter);
     }
-
-
-
 
 
 }

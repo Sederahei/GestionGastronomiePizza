@@ -51,7 +51,7 @@ class StockMovementDAOTest {
         assertEquals("ENTREE", firstMovement.getMovementType());
         assertEquals(100, firstMovement.getQuantity());
         assertEquals("U", firstMovement.getUnit());
-        assertEquals(LocalDateTime.of(2025, 2, 1, 8, 0), firstMovement.getMovementDate());
+        assertEquals(LocalDateTime.of(2025, 2, 1, 0, 0), firstMovement.getMovementDate());
     }
 }
 

@@ -134,9 +134,6 @@ public class IngredientDAOTest {
         }
     }
 
-
-
-
     @Test
     void testGetIngredientsCost() throws SQLException {
         Dish dish = new Dish(1, "Hot dog", 15000.0);
@@ -148,7 +145,7 @@ public class IngredientDAOTest {
         System.out.println("Coût des ingredients au 1er janvier: " + costBefore);
 
         // Modification des prix des ingrédients dans la base et récupération du coût à une autre date
-        double costAfter = dish.getIngredientsCost(LocalDate.of(2025, 2, 15));
+        double costAfter = dish.getIngredientsCost(LocalDate.of(2025, 2, 1));
         System.out.println("Coût après mise à jour des prix: " + costAfter);
     }
 
