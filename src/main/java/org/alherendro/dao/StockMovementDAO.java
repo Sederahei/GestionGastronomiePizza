@@ -137,8 +137,8 @@ public class StockMovementDAO implements StockMovementRepository {
             stmt.setString(2, stockMovement.getMovementType());
             stmt.setDouble(3, stockMovement.getQuantity());
             stmt.setString(4, stockMovement.getUnit().name());
-            //stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
-            stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate().truncatedTo(ChronoUnit.MICROS)));
+            stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate().truncatedTo(ChronoUnit.MILLIS)));
+           // stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate().truncatedTo(ChronoUnit.MICROS)));
 
 
             ResultSet rs = stmt.executeQuery();

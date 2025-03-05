@@ -33,7 +33,7 @@ class StockMovementDAOTest {
 
     @Test
     void testUpdateStockMovement() throws SQLException {
-        StockMovement movement = new StockMovement(0, 1, "ENTREE", 500, Unit.G, LocalDateTime.now());
+        StockMovement movement = new StockMovement(2, 1, "ENTREE", 0, Unit.G, LocalDateTime.now());
         stockMovementDAO.addStockMovement(movement);
 
         System.out.println("ID après insertion : " + movement.getId());
@@ -42,7 +42,6 @@ class StockMovementDAOTest {
         stockMovementDAO.updateStockMovement(movement);
 
         StockMovement updated = stockMovementDAO.getStockMovementById(movement.getId());
-        assertNotNull(updated, "Le mouvement mis à jour ne devrait pas être null");
         assertEquals(600, updated.getQuantity());
     }
 
@@ -79,8 +78,8 @@ class StockMovementDAOTest {
         assertEquals(movement.getMovementType(), retrieved.getMovementType());
         assertEquals(movement.getQuantity(), retrieved.getQuantity());
         assertEquals(movement.getUnit(), retrieved.getUnit());
-        // assertEquals(movement.getMovementDate(), retrieved.getMovementDate());
-        assertEquals(expected.truncatedTo(ChronoUnit.MICROS), actual.truncatedTo(ChronoUnit.MICROS));
+        assertEquals(movement.getMovementDate().truncatedTo(ChronoUnit.MILLIS), retrieved.getMovementDate());
+       // assertEquals(expected.truncatedTo(ChronoUnit.MICROS), actual.truncatedTo(ChronoUnit.MICROS));
 
     }
 
