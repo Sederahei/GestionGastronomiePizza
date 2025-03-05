@@ -5,7 +5,6 @@ import org.alherendro.Interface.StockMovementRepository;
 import org.alherendro.entity.StockMovement;
 import org.alherendro.entity.Unit;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,15 +15,19 @@ import java.util.List;
 import java.sql.*;
 
 public class StockMovementDAO implements StockMovementRepository {
-    private final Connection connection = DataSource.getConnection();
 
-    public StockMovementDAO(Connection connection) throws SQLException {
+
+    public StockMovementDAO(Connection connection) {
+
     }
 
     @Override
     public StockMovement getStockMovementById(int id) throws SQLException {
         String sql = "SELECT * FROM stock_movement WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+        try (
+                Connection connection = DataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -39,7 +42,10 @@ public class StockMovementDAO implements StockMovementRepository {
     public List<StockMovement> getAllStockMovements() throws SQLException {
         List<StockMovement> movements = new ArrayList<>();
         String sql = "SELECT * FROM stock_movement";
-        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (
+                Connection connection = DataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 movements.add(mapResultSetToStockMovement(rs));
             }
@@ -50,21 +56,24 @@ public class StockMovementDAO implements StockMovementRepository {
     @Override
     public void updateStockMovement(StockMovement stockMovement) throws SQLException {
         String sql = "UPDATE stock_movement SET id_ingredient = ?, movement_type = ?, quantity = ?, unit = ?, movement_datetime = ? WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (
+                Connection connection = DataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setInt(1, stockMovement.getIngredientId());
-            stmt.setString(2, stockMovement.getMovementType());
-            stmt.setDouble(3, stockMovement.getQuantity());
-            stmt.setString(4, stockMovement.getUnit().name());
-            stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
-            stmt.setInt(6, stockMovement.getId());
-            stmt.executeUpdate();
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+
+            }
+
         }
     }
 
     @Override
     public void deleteStockMovement(int id) throws SQLException {
         String sql = "DELETE FROM stock_movement WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (
+                Connection connection = DataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }
@@ -81,46 +90,49 @@ public class StockMovementDAO implements StockMovementRepository {
     }
 
 
-
-
-
     public double getAvailableQuantity(int ingredientId, LocalDateTime date) {
-        String query = "SELECT SUM(quantity) FROM stock_movement " +
-                "WHERE id_ingredient = ? AND movement_datetime <= ? " +
-                "GROUP BY id_ingredient";
+        String query = "SELECT " +
+                "COALESCE(SUM(CASE WHEN movement_type = 'ENTREE' THEN quantity ELSE 0 END), 0) - " +
+                "COALESCE(SUM(CASE WHEN movement_type = 'SORTIE' THEN quantity ELSE 0 END), 0) " +
+                "FROM stock_movement WHERE id_ingredient = ? AND movement_datetime <= ?";
 
-        try (Connection conn = DataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
+        try (
+                Connection connection=  DataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, ingredientId);
             stmt.setTimestamp(2, Timestamp.valueOf(date));
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getDouble(1);  // Renvoie la somme des quantités
-            } else {
-                return 0.0;
+                return rs.getDouble(1);
             }
+            return 0.0;
         } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la récupération de l'état du stock", e);
+            throw new RuntimeException("Erreur lors du calcul du stock disponible", e);
         }
     }
 
+    public int addStockMovement(StockMovement stockMovement) {
 
-    public void addStockMovement(StockMovement stockMovement) {
-        String query = "INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        /* String query = "INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime) \" +\n" +
+                "                   \"VALUES (?, ?, ?, ?::unit, ?) RETURNING id";*/
+        String query = "INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime) \n" +
+                "                   VALUES (?, ?, ?, ?::unit, ?) RETURNING id";
 
-        try (Connection conn = DataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
+        try (
+                Connection connection = DataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, stockMovement.getIngredientId());
             stmt.setString(2, stockMovement.getMovementType());
             stmt.setDouble(3, stockMovement.getQuantity());
             stmt.setString(4, stockMovement.getUnit().name());
             stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
 
-            stmt.executeUpdate();
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return -1; // Erreur
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de l'ajout du mouvement de stock", e);
         }
