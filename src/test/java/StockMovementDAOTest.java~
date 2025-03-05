@@ -80,6 +80,7 @@ class StockMovementDAOTest {
         assertEquals(movement.getQuantity(), retrieved.getQuantity());
         assertEquals(movement.getUnit(), retrieved.getUnit());
         // assertEquals(movement.getMovementDate(), retrieved.getMovementDate());
+
         assertEquals(expected.truncatedTo(ChronoUnit.MICROS), actual.truncatedTo(ChronoUnit.MICROS));
 
     }

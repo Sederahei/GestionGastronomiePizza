@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
@@ -24,19 +25,22 @@ public class StockMovementDAO implements StockMovementRepository {
     @Override
     public StockMovement getStockMovementById(int id) throws SQLException {
         String sql = "SELECT * FROM stock_movement WHERE id = ?";
-
         try (
                 Connection connection = DataSource.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)
+        ) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return mapResultSetToStockMovement(rs);
+                } else {
+                    System.out.println("Aucun mouvement trouvé avec l'ID : " + id);
                 }
             }
         }
         return null;
     }
+
 
     @Override
     public List<StockMovement> getAllStockMovements() throws SQLException {
@@ -60,9 +64,16 @@ public class StockMovementDAO implements StockMovementRepository {
                 Connection connection = DataSource.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(sql)){
             stmt.setInt(1, stockMovement.getIngredientId());
-            ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
-
+            try {
+                stmt.setInt(1, stockMovement.getIngredientId());
+                stmt.setString(2, stockMovement.getMovementType());
+                stmt.setDouble(3, stockMovement.getQuantity());
+                stmt.setObject(4, stockMovement.getUnit().name(), java.sql.Types.OTHER);
+                stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
+                stmt.setInt(6, stockMovement.getId());
+                stmt.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
 
         }
@@ -126,7 +137,9 @@ public class StockMovementDAO implements StockMovementRepository {
             stmt.setString(2, stockMovement.getMovementType());
             stmt.setDouble(3, stockMovement.getQuantity());
             stmt.setString(4, stockMovement.getUnit().name());
-            stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
+            //stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
+            stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate().truncatedTo(ChronoUnit.MICROS)));
+
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {

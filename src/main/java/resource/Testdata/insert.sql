@@ -102,3 +102,6 @@ VALUES
     (2, 'ENTREE', 20, 'L', '2025-02-01 08:00:00'),
     (3, 'ENTREE', 100, 'U', '2025-02-01 08:00:00'),
     (4, 'ENTREE', 50, 'U', '2025-02-01 08:00:00');
+
+ manova ny second ho 06 chiffre
+ALTER TABLE stock_movement ALTER COLUMN movement_datetime TYPE TIMESTAMP(6);
