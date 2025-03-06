@@ -109,7 +109,7 @@ class StockMovementDAOTest {
     @Test
     @Order(1)
     void testStockBeforeAnyMovement() {
-        double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());  // ✅ Utilisation correcte de stockMovementDAO
+        double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());
         assertEquals(0, stock, "Le stock initial doit être 0.");
     }
 
@@ -122,14 +122,14 @@ class StockMovementDAOTest {
     }
 
     private void insertStockMovement(int ingredientId, double quantity, Unit unit, LocalDateTime date, MovementType type) {
-        String sql = "INSERT INTO stock_movement (id_ingredient, quantity, unit, movement_datetime, movement_type) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO stock_movement (id_ingredient, quantity, unit, movement_datetime, movement_type) VALUES (?, ?, ?::unit, ?, ?::movementtype)";
         try (Connection conn = DataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, ingredientId);
             stmt.setDouble(2, quantity);
-            stmt.setString(3, unit.toString());
+            stmt.setString(3, unit.name()); // Utilisation de unit.name()
             stmt.setTimestamp(4, Timestamp.valueOf(date));
-            stmt.setString(5, type.toString());
+            stmt.setString(5, type.name()); // Utilisation de type.name()
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de l'insertion de stock", e);
@@ -150,6 +150,7 @@ class StockMovementDAOTest {
     void testStockAfterEntry() {
         insertStockMovement(1, 100, Unit.G, LocalDateTime.of(2025, 2, 1, 10, 0, 0), MovementType.IN);
         double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());
+        System.out.println("stock sont = " +  stock);
         assertEquals(100, stock, "Le stock après une entrée doit être 100.");
     }
 
@@ -160,14 +161,25 @@ class StockMovementDAOTest {
         insertStockMovement(1, 30, Unit.G, LocalDateTime.of(2025, 2, 5, 15, 30, 0), MovementType.OUT);
         double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());
         assertEquals(70, stock, "Le stock après une entrée de 100 et une sortie de 30 doit être 70.");
-        System.out.println("stock = " + stock);
+        System.out.println("après une  stock entrée , il reste de  = " + stock);
     }
 
     @Test
     @Order(4)
     void testStockOnFutureDate() {
-        insertStockMovement(1, 50, Unit.G, LocalDateTime.of(2025, 2, 2, 12, 0, 0), MovementType.IN);
-        double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());
+        // Insérer les mouvements de stock nécessaires pour obtenir un stock de 70
+        insertStockMovement(1, 100, Unit.G, LocalDateTime.of(2025, 2, 1, 10, 0, 0), MovementType.IN);
+        insertStockMovement(1, 30, Unit.G, LocalDateTime.of(2025, 2, 5, 15, 30, 0), MovementType.OUT);
+
+        // Insérer le mouvement de stock futur (après la sortie)
+        LocalDateTime futureDate = LocalDateTime.of(2025, 2, 6, 12, 0, 0); // Date future après la sortie
+        insertStockMovement(1, 50, Unit.G, futureDate, MovementType.IN);
+
+        // Calculer le stock à une date antérieure à l'entrée future, mais postérieure à la sortie
+        double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.of(2025, 2, 6, 0, 0, 0)); // Date postérieure à la sortie
+
+        // Vérifier que le stock est correct
+        System.out.println("stock serait = " + stock);
         assertEquals(70, stock, "Le stock ne doit pas inclure les entrées futures.");
     }
 

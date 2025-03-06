@@ -157,13 +157,17 @@ public class StockMovementDAO implements StockMovementRepository {
 
 
     public double getAvailableStock(int ingredientId, LocalDateTime localDateTime) {
+        if (ingredientId <= 0) {
+            throw new IllegalArgumentException("ingredientId must be positive");
+        }
+
         String sql = """
-            SELECT 
-                COALESCE(SUM(CASE WHEN movement_type = 'IN' THEN quantity ELSE 0 END), 0) - 
-                COALESCE(SUM(CASE WHEN movement_type = 'OUT' THEN quantity ELSE 0 END), 0) 
-            FROM stock_movement 
-            WHERE id_ingredient = ? AND movement_datetime <= ?;
-        """;
+        SELECT 
+            COALESCE(SUM(CASE WHEN movement_type = 'IN' THEN quantity ELSE 0 END), 0) - 
+            COALESCE(SUM(CASE WHEN movement_type = 'OUT' THEN quantity ELSE 0 END), 0) 
+        FROM stock_movement 
+        WHERE id_ingredient = ? AND movement_datetime <= ?;
+    """;
 
         try (Connection conn = DataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -180,17 +184,24 @@ public class StockMovementDAO implements StockMovementRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors du calcul du stock disponible", e);
         }
-        return 0; // Retourne 0 si aucun mouvement n'est trouvé
+        return 0;
     }
 
     public void recordStockHistory(int ingredientId, LocalDateTime stockDateTime, double quantity, Unit unit) throws SQLException {
+        if (ingredientId <= 0) {
+            throw new IllegalArgumentException("ingredientId must be positive");
+        }
+        if (quantity < 0) {
+            throw new IllegalArgumentException("quantity must not be negative");
+        }
+
         String sql = "INSERT INTO stock_history (id_ingredient, stock_datetime, quantity, unit) VALUES (?, ?, ?, ?::unit)";
         try (Connection conn = DataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, ingredientId);
             stmt.setTimestamp(2, Timestamp.valueOf(stockDateTime));
             stmt.setDouble(3, quantity);
-            stmt.setString(4, unit.toString());
+            stmt.setString(4, unit.name()); // Utilisation de unit.name()
             stmt.executeUpdate();
         }
     }
