@@ -155,14 +155,15 @@ public class StockMovementDAO implements StockMovementRepository {
     }
 
 
+
     public double getAvailableStock(int ingredientId, LocalDateTime localDateTime) {
         String sql = """
-        SELECT 
-            COALESCE(SUM(CASE WHEN movement_type = 'IN' THEN quantity ELSE 0 END), 0) - 
-            COALESCE(SUM(CASE WHEN movement_type = 'OUT' THEN quantity ELSE 0 END), 0) 
-        FROM stock_movement 
-        WHERE id_ingredient = ? AND movement_datetime <= ?;
-    """;
+            SELECT 
+                COALESCE(SUM(CASE WHEN movement_type = 'IN' THEN quantity ELSE 0 END), 0) - 
+                COALESCE(SUM(CASE WHEN movement_type = 'OUT' THEN quantity ELSE 0 END), 0) 
+            FROM stock_movement 
+            WHERE id_ingredient = ? AND movement_datetime <= ?;
+        """;
 
         try (Connection conn = DataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -176,15 +177,23 @@ public class StockMovementDAO implements StockMovementRepository {
                     return rs.getDouble(1);
                 }
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erreur lors du calcul du stock disponible", e);
         }
-
         return 0; // Retourne 0 si aucun mouvement n'est trouvé
     }
 
-
+    public void recordStockHistory(int ingredientId, LocalDateTime stockDateTime, double quantity, Unit unit) throws SQLException {
+        String sql = "INSERT INTO stock_history (id_ingredient, stock_datetime, quantity, unit) VALUES (?, ?, ?, ?::unit)";
+        try (Connection conn = DataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, ingredientId);
+            stmt.setTimestamp(2, Timestamp.valueOf(stockDateTime));
+            stmt.setDouble(3, quantity);
+            stmt.setString(4, unit.toString());
+            stmt.executeUpdate();
+        }
+    }
 
 }
 

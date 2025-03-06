@@ -1,4 +1,4 @@
-\c
+
 lagastronomiepizza;
 
 CREATE TYPE unit AS ENUM ('G', 'L', 'U');
@@ -84,3 +84,10 @@ CREATE TABLE stock_movement
     movement_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE stock_history (
+                               id SERIAL PRIMARY KEY,
+                               id_ingredient INTEGER REFERENCES ingredient(id_ingredient) ON DELETE CASCADE,
+                               stock_datetime TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+                               quantity DOUBLE PRECISION NOT NULL,
+                               unit UNIT NOT NULL
+);
