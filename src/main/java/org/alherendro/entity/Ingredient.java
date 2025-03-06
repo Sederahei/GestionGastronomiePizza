@@ -1,4 +1,6 @@
 package org.alherendro.entity;
+import org.alherendro.dao.StockMovementDAO;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -118,4 +120,14 @@ public class Ingredient {
     public Ingredient getIngredientById(int i) {
         return null;
     }
+    public double getAvailableQuantity(LocalDateTime date) {
+        StockMovementDAO stockMovementDAO = new StockMovementDAO(null); // Utilisez un constructeur approprié
+        return stockMovementDAO.getAvailableStock(this.getId(), date); // Utilisez getId()
+    }
+
+    public double getAvailableQuantity() {
+        return getAvailableQuantity(LocalDateTime.now());
+    }
+
+
 }

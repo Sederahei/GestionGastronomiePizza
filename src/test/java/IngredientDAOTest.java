@@ -3,6 +3,7 @@ import org.alherendro.dao.IngredientDAO;
 import org.alherendro.entity.Dish;
 import org.alherendro.entity.Ingredient;
 import org.alherendro.entity.Unit;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -150,6 +151,50 @@ public class IngredientDAOTest {
         // Modification des prix des ingrédients dans la base et récupération du coût à une autre date
         double costAfter = dish.getIngredientsCost(LocalDate.of(2025, 2, 1));
         System.out.println("Coût après mise à jour des prix: " + costAfter);
+    }
+
+    private static Ingredient oeuf;
+    private static Ingredient pain;
+    private static Ingredient saucisse;
+    private static Ingredient huile;
+
+    @BeforeAll
+    static void setup() {
+        oeuf = new Ingredient(3, "Oeuf", 1000, Unit.U);
+        pain = new Ingredient(4, "Pain", 1000, Unit.U);
+        saucisse = new Ingredient(1, "Saucisse", 20, Unit.G);
+        huile = new Ingredient(2, "Huile", 10000, Unit.L);
+    }
+
+
+
+    @Test
+    void testInitialStock() {
+        assertEquals(100, oeuf.getAvailableQuantity());
+        assertEquals(100, pain.getAvailableQuantity());
+        assertEquals(10000, saucisse.getAvailableQuantity());
+        assertEquals(20, huile.getAvailableQuantity());
+    }
+    @Test
+    void testStockAfterOutMovements() {
+        assertEquals(80, oeuf.getAvailableQuantity(LocalDateTime.of(2025, 2, 24, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute())));
+        assertEquals(80, pain.getAvailableQuantity(LocalDateTime.of(2025, 2, 24, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute())));
+        assertEquals(10000, saucisse.getAvailableQuantity(LocalDateTime.of(2025, 2, 24, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute())));
+        assertEquals(20, huile.getAvailableQuantity(LocalDateTime.of(2025, 2, 24, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute())));
+    }
+
+    @Test
+    void testCreateNewIngredients() {
+        Ingredient sel = new Ingredient(5, "Sel", 2.5, Unit.G);
+        Ingredient riz = new Ingredient(6, "Riz", 3.5, Unit.G);
+
+        assertEquals("Sel", sel.getName());
+        assertEquals(Unit.G, sel.getUnit());
+        assertEquals(2.5, sel.getUnitPrice());
+
+        assertEquals("Riz", riz.getName());
+        assertEquals(Unit.G, riz.getUnit());
+        assertEquals(3.5, riz.getUnitPrice());
     }
 
 }

@@ -132,3 +132,12 @@ SELECT id_ingredient,
 FROM stock_movement
 WHERE movement_datetime <= '2025-03-06 23:59:59'
 GROUP BY id_ingredient;
+
+INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime)
+VALUES (1, 'OUT', 10, 'U', '2025-02-02 10:00:00');
+
+INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime)
+VALUES (1, 'OUT', 10, 'U', '2025-02-03 15:00:00');
+
+INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime)
+VALUES (2, 'OUT', 20, 'U', '2025-02-05 16:00:00');
