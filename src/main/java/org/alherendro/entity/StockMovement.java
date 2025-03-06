@@ -1,17 +1,20 @@
 package org.alherendro.entity;
 
 import java.math.BigDecimal;
+import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StockMovement {
     private int id;
     private int ingredientId;
-    private String movementType; // "ENTREE" ou "SORTIE"
+    private MovementType movementType; // Utilisation de l'énumération MovementType
     private double quantity;
     private Unit unit;
     private LocalDateTime movementDate;
 
-    public StockMovement(int id, int ingredientId, String movementType, double quantity, Unit unit, LocalDateTime movementDate) {
+    public StockMovement(int id, int ingredientId, MovementType movementType, double quantity, Unit unit, LocalDateTime movementDate) {
         this.id = id;
         this.ingredientId = ingredientId;
         this.movementType = movementType;
@@ -20,17 +23,11 @@ public class StockMovement {
         this.movementDate = movementDate;
     }
 
-    public StockMovement(int id, int idIngredient, String movementType, BigDecimal quantity, Unit unit, LocalDateTime movementDatetime) {
-        this.id = id;
-        this.ingredientId = idIngredient;
-        this.movementType = movementType;
-        this.quantity = quantity.doubleValue();
-        this.unit = unit;
-        this.movementDate = movementDatetime;
-
+    public StockMovement(int id, int ingredientId, String movementType, double quantity, Unit unit, LocalDateTime movementDate) {
+        this(id, ingredientId, MovementType.valueOf(movementType), quantity, unit, movementDate);  // Conversion du String en MovementType
     }
-    public StockMovement() {
 
+    public StockMovement() {
     }
 
     public int getId() {
@@ -49,11 +46,11 @@ public class StockMovement {
         this.ingredientId = ingredientId;
     }
 
-    public String getMovementType() {
+    public MovementType getMovementType() {
         return movementType;
     }
 
-    public void setMovementType(String movementType) {
+    public void setMovementType(MovementType movementType) {
         this.movementType = movementType;
     }
 
@@ -81,27 +78,21 @@ public class StockMovement {
         this.movementDate = movementDate;
     }
 
-    public StockMovement(int id, LocalDateTime movementDate, double quantity, String movementType, int ingredientId, Unit unit) {
-        this.id = id;
-        this.movementDate = movementDate;
-        this.quantity = quantity;
-        this.movementType = movementType;
-        this.ingredientId = ingredientId;
-        this.unit = unit;
-    }
-
     @Override
     public String toString() {
         return "StockMovement{" +
                 "id=" + id +
                 ", ingredientId=" + ingredientId +
-                ", movementType='" + movementType + '\'' +
+                ", movementType=" + movementType +  // Affichage avec l'énumération
                 ", quantity=" + quantity +
-                ", unit='" + unit + '\'' +
+                ", unit=" + unit +
                 ", movementDate=" + movementDate +
                 '}';
     }
 
 
-}
+    }
+
+
+
 

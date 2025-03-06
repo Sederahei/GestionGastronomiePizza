@@ -1,5 +1,7 @@
 package org.alherendro.entity;
 
+import java.math.BigDecimal;
+import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -1,6 +1,8 @@
+import java.sql.PreparedStatement;
 import java.time.temporal.ChronoUnit;
 import org.alherendro.DataSource;
 import org.alherendro.dao.StockMovementDAO;
+import org.alherendro.entity.MovementType;
 import org.alherendro.entity.StockMovement;
 import org.alherendro.entity.Unit;
 import org.junit.jupiter.api.*;
@@ -28,6 +30,9 @@ class StockMovementDAOTest {
 
         stockMovementDAO = new StockMovementDAO(connection);
     }
+
+
+
 
 
 
@@ -69,7 +74,7 @@ class StockMovementDAOTest {
 
     @Test
     void testAddAndGetStockMovement() throws SQLException {
-        StockMovement movement = new StockMovement(0, 1, "ENTREE", 500, Unit.G, LocalDateTime.now());
+        StockMovement movement = new StockMovement(0, 1, MovementType.IN, 500, Unit.G, LocalDateTime.now());  // Utilisation de MovementType.IN
         int generatedId = stockMovementDAO.addStockMovement(movement);
 
         StockMovement retrieved = stockMovementDAO.getStockMovementById(generatedId);
@@ -79,9 +84,9 @@ class StockMovementDAOTest {
         assertEquals(movement.getQuantity(), retrieved.getQuantity());
         assertEquals(movement.getUnit(), retrieved.getUnit());
         assertEquals(movement.getMovementDate().truncatedTo(ChronoUnit.MILLIS), retrieved.getMovementDate());
-       // assertEquals(expected.truncatedTo(ChronoUnit.MICROS), actual.truncatedTo(ChronoUnit.MICROS));
-
+        // assertEquals(expected.truncatedTo(ChronoUnit.MICROS), actual.truncatedTo(ChronoUnit.MICROS));
     }
+
 
     @Test
     void testGetAvailableQuantity() {
@@ -89,13 +94,89 @@ class StockMovementDAOTest {
         LocalDateTime testDate = LocalDateTime.of(2025, 2, 24, 0, 0);
 
         double expectedQuantity = 10000.00;
-        double availableQuantity = stockMovementDAO.getAvailableQuantity(ingredientId, testDate);
+        double availableQuantity = stockMovementDAO.  getAvailableQuantity(ingredientId, testDate);
 
         System.out.println("availableQuantity = " + availableQuantity);
         assertEquals(expectedQuantity, availableQuantity, 0.01);
     }
 
 
+
+
+
+
+    @BeforeAll
+    static void setup() {
+    }
+
+    @AfterEach
+    void cleanup() {
+        clearStockMovements();
+    }
+    @Test
+    @Order(1)
+    void testStockBeforeAnyMovement() {
+        double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());  // ✅ Utilisation correcte de stockMovementDAO
+        assertEquals(0, stock, "Le stock initial doit être 0.");
+    }
+
+    @Test
+    @Order(2)
+    void testStockAfterEntry() {
+        insertStockMovement(1, 100, Unit.G, "2025-02-01 10:00:00", "IN");
+
+        double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());
+        assertEquals(100, stock, "Le stock après une entrée doit être 100.");
+    }
+
+    @Test
+    @Order(3)
+    void testStockAfterEntryAndExit() {
+        insertStockMovement(1, 100, Unit.G, "2025-02-01 10:00:00", "IN");
+        insertStockMovement(1, 30, Unit.G, "2025-02-05 15:30:00", "OUT");
+
+        double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());  // ✅ Correction ici
+        assertEquals(70, stock, "Le stock après une entrée de 100 et une sortie de 30 doit être 70.");
+    }
+
+    @Test
+    @Order(4)
+    void testStockOnFutureDate() {
+        insertStockMovement(1, 50, Unit.G, "2025-02-02 12:00:00", "IN");
+        double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());  // ✅ Correction ici
+        assertEquals(70, stock, "Le stock ne doit pas inclure les entrées futures.");
+    }
+
+    @Test
+    @Order(5)
+    void testStockForIngredientWithoutMovements() {
+        double stock = stockMovementDAO.getAvailableStock(99, LocalDateTime.now());
+        assertEquals(0, stock, "Un ingrédient sans mouvement doit avoir un stock de 0.");
+    }
+
+    private void insertStockMovement(int ingredientId, double quantity, Unit unit, String date, String type) {
+        String sql = "INSERT INTO stock_movement (id_ingredient, quantity, unit, movement_datetime, movement_type) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, ingredientId);
+            stmt.setDouble(2, quantity);
+            stmt.setString(3, unit.toString());
+            stmt.setString(4, date);
+            stmt.setString(5, type);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de l'insertion de stock", e);
+        }
+    }
+
+    private void clearStockMovements() {
+        try (Connection conn = DataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM stock_movement")) {
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors du nettoyage des mouvements de stock", e);
+        }
+    }
 
 
 }

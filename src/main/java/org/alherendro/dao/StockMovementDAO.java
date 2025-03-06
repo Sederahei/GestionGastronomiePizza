@@ -2,18 +2,18 @@ package org.alherendro.dao;
 
 import org.alherendro.DataSource;
 import org.alherendro.Interface.StockMovementRepository;
+import org.alherendro.entity.MovementType;
 import org.alherendro.entity.StockMovement;
 import org.alherendro.entity.Unit;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.*;
 
 public class StockMovementDAO implements StockMovementRepository {
 
@@ -66,7 +66,7 @@ public class StockMovementDAO implements StockMovementRepository {
             stmt.setInt(1, stockMovement.getIngredientId());
             try {
                 stmt.setInt(1, stockMovement.getIngredientId());
-                stmt.setString(2, stockMovement.getMovementType());
+                stmt.setString(2, stockMovement.getMovementType().name());
                 stmt.setDouble(3, stockMovement.getQuantity());
                 stmt.setObject(4, stockMovement.getUnit().name(), java.sql.Types.OTHER);
                 stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate()));
@@ -91,13 +91,16 @@ public class StockMovementDAO implements StockMovementRepository {
     }
 
     private StockMovement mapResultSetToStockMovement(ResultSet rs) throws SQLException {
-        int id = rs.getInt("id");
-        int ingredientId = rs.getInt("id_ingredient");
-        String movementType = rs.getString("movement_type");
-        double quantity = rs.getDouble("quantity");
-        Unit unit = Unit.valueOf(rs.getString("unit"));
-        LocalDateTime movementDate = rs.getTimestamp("movement_datetime").toLocalDateTime();
-        return new StockMovement(id, ingredientId, movementType, quantity, unit, movementDate);
+
+            int id = rs.getInt("id");
+            int ingredientId = rs.getInt("id_ingredient");
+            MovementType movementType = MovementType.valueOf(rs.getString("movement_type"));  // Conversion String vers MovementType
+            double quantity = rs.getDouble("quantity");
+            Unit unit = Unit.valueOf(rs.getString("unit"));
+            LocalDateTime movementDate = rs.getTimestamp("movement_datetime").toLocalDateTime();
+            return new StockMovement(id, ingredientId, movementType, quantity, unit, movementDate);
+
+
     }
 
 
@@ -134,7 +137,7 @@ public class StockMovementDAO implements StockMovementRepository {
                 Connection connection = DataSource.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, stockMovement.getIngredientId());
-            stmt.setString(2, stockMovement.getMovementType());
+            stmt.setString(2, stockMovement.getMovementType().name());
             stmt.setDouble(3, stockMovement.getQuantity());
             stmt.setString(4, stockMovement.getUnit().name());
             stmt.setTimestamp(5, Timestamp.valueOf(stockMovement.getMovementDate().truncatedTo(ChronoUnit.MILLIS)));
@@ -150,6 +153,37 @@ public class StockMovementDAO implements StockMovementRepository {
             throw new RuntimeException("Erreur lors de l'ajout du mouvement de stock", e);
         }
     }
+
+
+    public double getAvailableStock(int ingredientId, LocalDateTime localDateTime) {
+        String sql = """
+        SELECT 
+            COALESCE(SUM(CASE WHEN movement_type = 'IN' THEN quantity ELSE 0 END), 0) - 
+            COALESCE(SUM(CASE WHEN movement_type = 'OUT' THEN quantity ELSE 0 END), 0) 
+        FROM stock_movement 
+        WHERE id_ingredient = ? AND movement_datetime <= ?;
+    """;
+
+        try (Connection conn = DataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, ingredientId);
+            Timestamp timestamp = Timestamp.valueOf(localDateTime);
+            stmt.setTimestamp(2, timestamp);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble(1);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0; // Retourne 0 si aucun mouvement n'est trouvé
+    }
+
 
 
 }

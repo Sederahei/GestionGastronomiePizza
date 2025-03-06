@@ -1,11 +1,7 @@
-\c
-lagastronomiepizza;
-\d
-Dish;
-\d
-Ingredient;
-\d
-Dish_Ingredient;
+\c lagastronomiepizza;
+\d Dish;
+\d Ingredient;
+\d Dish_Ingredient;
 
 
 INSERT INTO Ingredient (name, update_datetime, unit_price, unit)
@@ -35,7 +31,7 @@ VALUES (1, 1, 100, 'G'),
        (1, 4, 1, 'U');
 
 
-==> pour omelette
+
 INSERT INTO Dish_Ingredient (id_dish, id_ingredient, required_quantity, unit)
 SELECT d.id_dish, i.id_ingredient, ing.quantity, ing.unit::unit  -- Casting explicite ici
 FROM Dish d
@@ -60,7 +56,6 @@ VALUES (1, 100.00, 'G'),
        (4, 1.00, 'U');
 
 
-//pour   le mise a jour de prie de base et de la reorganisation  par Id :
 
 UPDATE Dish
 SET unit_price = 15000
@@ -70,7 +65,7 @@ SELECT *
 FROM Dish
 ORDER BY id_dish;
 
-// pour le donne diplicate
+
 DELETE
 FROM ingredient
 WHERE id_ingredient IN (SELECT id_ingredient
@@ -78,30 +73,62 @@ WHERE id_ingredient IN (SELECT id_ingredient
                         ORDER BY id_ingredient
                         OFFSET 4);
 
-MISE A JOUR pour le istorique de prix(question 7)
+
 
 UPDATE Ingredient
 SET unit_price = 2500, update_datetime = '2025-03-01 12:00:00'
 WHERE id_ingredient = 1;
 
-Insertion de mise a joour :
+
           INSERT INTO Ingredient (id_ingredient, name, update_datetime, unit_price, unit)
 VALUES
 (1, 'Saucisse', '2025-03-01 00:00:00', 2500, 'G'),
 (1, 'Saucisse', '2025-03-01 12:00:00', 3000, 'G');
 
-     //     ==> commande pour metre l id recomnce en 1
-ALTER SEQUENCE public.ingredient_price_history_id_seq RESTART WITH 1;
+     /*    ==> commande pour metre l id recomnce en 1*/
+/*ALTER SEQUENCE public.ingredient_price_history_id_seq RESTART WITH 1;*/
 
 
 INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime)
 VALUES
 
+    ((SELECT id_ingredient FROM Ingredient WHERE name = 'Saucisse'), 'IN', 10000, 'G', '2025-02-01 08:00:00'),
 
-    (1, 'ENTREE', 10000, 'G', '2025-02-01 08:00:00'),
-    (2, 'ENTREE', 20, 'L', '2025-02-01 08:00:00'),
-    (3, 'ENTREE', 100, 'U', '2025-02-01 08:00:00'),
-    (4, 'ENTREE', 50, 'U', '2025-02-01 08:00:00');
 
- manova ny second ho 06 chiffre
+    ((SELECT id_ingredient FROM Ingredient WHERE name = 'Huile'), 'IN', 20, 'L', '2025-02-01 08:00:00'),
+
+
+    ((SELECT id_ingredient FROM Ingredient WHERE name = 'Oeuf'), 'IN', 100, 'U', '2025-02-01 08:00:00'),
+
+
+    ((SELECT id_ingredient FROM Ingredient WHERE name = 'Pain'), 'IN', 50, 'U', '2025-02-01 08:00:00');
+
+
+
+
+ /* manova ny second ho 06 chiffre */
 ALTER TABLE stock_movement ALTER COLUMN movement_datetime TYPE TIMESTAMP(6);
+
+
+
+INSERT INTO stock_movement (id_ingredient, movement_type, quantity, unit, movement_datetime)
+VALUES
+    ((SELECT id_ingredient FROM Ingredient WHERE name = 'Oeuf'), 'IN', 100, 'U', '2025-02-01 08:00:00'),
+
+    ((SELECT id_ingredient FROM Ingredient WHERE name = 'Pain'), 'IN', 50, 'U', '2025-02-01 08:00:00'),
+
+    ((SELECT id_ingredient FROM Ingredient WHERE name = 'Saucisse'), 'IN', 10000, 'G', '2025-02-01 08:00:00'),
+
+    ((SELECT id_ingredient FROM Ingredient WHERE name = 'Huile'), 'IN', 20, 'L', '2025-02-01 08:00:00');
+
+/* Ajout d'un index pour optimiser les recherches*/
+
+CREATE INDEX idx_stock_movement_date ON stock_movement(movement_datetime);
+CREATE INDEX idx_stock_movement_ingredient ON stock_movement(id_ingredient);
+/*  Récupérer le stock disponible à une date donnée*/
+
+SELECT id_ingredient,
+       SUM(CASE WHEN movement_type = 'IN' THEN quantity ELSE -quantity END) AS stock_disponible
+FROM stock_movement
+WHERE movement_datetime <= '2025-03-06 23:59:59'
+GROUP BY id_ingredient;

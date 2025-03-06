@@ -67,13 +67,20 @@ INSERT INTO Ingredient_Price_History (id_ingredient, price, update_date) VALUES
 
 
 
+
+DROP TABLE IF EXISTS stock_movement CASCADE;
+
+
+CREATE TYPE movementtype AS ENUM ('IN', 'OUT');
+
+
 CREATE TABLE stock_movement
 (
     id                SERIAL PRIMARY KEY,
-    id_ingredient     INTEGER                                                   NOT NULL REFERENCES Ingredient (id_ingredient) ON DELETE CASCADE,
-    movement_type     VARCHAR(10) CHECK (movement_type IN ('ENTREE', 'SORTIE')) NOT NULL,
-    quantity          DECIMAL(10, 2)                                            NOT NULL,
-    unit              unit                                                      NOT NULL,
-    movement_datetime TIMESTAMP                                                 NOT NULL DEFAULT CURRENT_TIMESTAMP
+    id_ingredient     INTEGER NOT NULL REFERENCES Ingredient(id_ingredient) ON DELETE CASCADE,
+    movement_type     movementtype NOT NULL,  -- Utilisation du type ENUM
+    quantity          DECIMAL(10, 2) NOT NULL,
+    unit              unit NOT NULL,
+    movement_datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
