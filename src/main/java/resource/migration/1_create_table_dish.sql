@@ -91,3 +91,34 @@ CREATE TABLE stock_history (
                                quantity DOUBLE PRECISION NOT NULL,
                                unit UNIT NOT NULL
 );
+
+
+
+CREATE TYPE ORDER_STATUS_ENUM AS ENUM ('CREATED', 'CONFIRMED', 'PREPARING', 'READY', 'DELIVERED', 'CANCELLED');
+CREATE TYPE DISH_ORDER_STATUS_ENUM AS ENUM ('PENDING', 'PREPARING', 'READY', 'CANCELLED');
+
+CREATE TABLE "order" (
+                         id SERIAL PRIMARY KEY,
+                         order_date TIMESTAMP NOT NULL
+);
+
+CREATE TABLE dish_order (
+                            id SERIAL PRIMARY KEY,
+                            order_id INT REFERENCES "order"(id),
+                            dish_id INT REFERENCES dish(id_dish),
+                            quantity INT NOT NULL
+);
+
+CREATE TABLE order_status (
+                              id SERIAL PRIMARY KEY,
+                              order_id INT REFERENCES "order"(id),
+                              status ORDER_STATUS_ENUM NOT NULL,
+                              status_date TIMESTAMP NOT NULL
+);
+
+CREATE TABLE dish_order_status (
+                                   id SERIAL PRIMARY KEY,
+                                   dish_order_id INT REFERENCES dish_order(id),
+                                   status DISH_ORDER_STATUS_ENUM NOT NULL,
+                                   status_date TIMESTAMP NOT NULL
+);
