@@ -105,7 +105,7 @@ class StockMovementDAOTest {
     void testStockAfterEntry() {
         insertStockMovement(1, 100, Unit.G, LocalDateTime.of(2025, 2, 1, 10, 0, 0), MovementType.IN);
         double stock = stockMovementDAO.getAvailableStock(1, LocalDateTime.now());
-        System.out.println("stock  sont = " +  stock);
+        System.out.println("stock eregidtre sont = " +  stock);
         assertEquals(100, stock, "Le stock après une entrée doit être 100.");
     }
 
