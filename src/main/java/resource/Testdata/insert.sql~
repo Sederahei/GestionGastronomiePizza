@@ -82,7 +82,7 @@ WHERE id_ingredient = 1;
 
           INSERT INTO Ingredient (id_ingredient, name, update_datetime, unit_price, unit)
 VALUES
-(9, 'Tsaramaso', '2025-03-01 00:00:00', 2500, 'G'),
+(9, 'Tsaramasp', '2025-03-01 00:00:00', 2500, 'G'),
 (1, 'Saucisse', '2025-03-01 12:00:00', 3000, 'G');
 
      /*    ==> commande pour metre l id recomnce en 1*/

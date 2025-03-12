@@ -43,14 +43,14 @@ public class DishDAOTest{
 
         // ==> Preparation
         DishDAO dishDAO = new DishDAO();
-        Dish dish = new Dish(7, "Tsaramaso", 10000.0, List.of());
+        Dish dish = new Dish(9, "Tsaramaso", 10000.0, List.of());
 
         // ==> Execution
         dishDAO.save(dish);
 
         // ==> Verification
         System.out.println("dish succeful saved " + dish);
-        assertEquals(7, dish.getId());
+        assertEquals(9, dish.getId());
 
     }
 

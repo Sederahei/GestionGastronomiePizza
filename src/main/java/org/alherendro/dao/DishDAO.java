@@ -64,7 +64,7 @@ public class DishDAO implements CrudOperationsDish<Dish> {
     }
 
     @Override
-    public Dish save(Dish entity)                                 {
+    public Dish save(Dish entity)                               {
         String sql = "INSERT INTO dish (name, unit_price) VALUES (?, ?)";
         try {
             Connection connection = DataSource.getConnection();
