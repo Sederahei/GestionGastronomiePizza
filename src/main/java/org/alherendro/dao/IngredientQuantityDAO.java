@@ -24,11 +24,10 @@ public class IngredientQuantityDAO implements CrudOperationIngredientQuantity<In
 
                 ingredientQuantities.add(
                         new IngredientQuantity(
-                                // ✅ Utilisation correcte de l'id de l'ingrédient
                                 IngredientDAO.findByid(rs.getInt("id_ingredient")),
-                                // ✅ L'id de ingredient_quantity
+                                
                                 rs.getInt("id"),
-                                // ✅ Correction du nom de la colonne
+                                
                                 rs.getDouble("required_quantity")
                         )
                 );

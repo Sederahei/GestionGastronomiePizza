@@ -2,6 +2,8 @@ package org.alherendro.dao;
 
 import org.alherendro.DataSource;
 import org.alherendro.entity.DishOrder;
+import org.alherendro.entity.IngredientQuantity;
+import org.alherendro.entity.Dish;
 
 import java.sql.*;
 
@@ -18,6 +20,15 @@ public class DishOrderDAO {
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 dishOrder.setId(generatedKeys.getInt(1));
+            }
+            // maka an le  dish associated with this order
+            DishDAO dishDAO = new DishDAO();
+            IngredientDAO ingredientDAO = new IngredientDAO();
+            Dish dish = dishDAO.findById(dishOrder.getDishId());
+            if (dish != null && dish.getIngredients() != null) {
+                for (IngredientQuantity iq : dish.getIngredients()) {
+                    ingredientDAO.findById(iq.getIngredient().getId());
+                }
             }
         }
         return dishOrder;
@@ -62,4 +73,7 @@ public class DishOrderDAO {
             statement.executeUpdate();
         }
     }
+
+
+
 }

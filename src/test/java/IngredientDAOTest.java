@@ -17,6 +17,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IngredientDAOTest {
+    @BeforeAll
+    static void setup() {
+        oeuf = new Ingredient(3, "Oeuf", 1000, Unit.U);
+        pain = new Ingredient(4, "Pain", 1000, Unit.U);
+        saucisse = new Ingredient(1, "Saucisse", 20, Unit.G);
+        huile = new Ingredient(2, "Huile", 10000, Unit.L);
+    }
+
+    private static Ingredient oeuf;
+    private static Ingredient pain;
+    private static Ingredient saucisse;
+    private static Ingredient huile;
 
     @Test
     void save_ingredient() {
@@ -152,20 +164,6 @@ public class IngredientDAOTest {
         double costAfter = dish.getIngredientsCost(LocalDate.of(2025, 2, 1));
         System.out.println("Coût après mise à jour des prix: " + costAfter);
     }
-
-    private static Ingredient oeuf;
-    private static Ingredient pain;
-    private static Ingredient saucisse;
-    private static Ingredient huile;
-
-    @BeforeAll
-    static void setup() {
-        oeuf = new Ingredient(3, "Oeuf", 1000, Unit.U);
-        pain = new Ingredient(4, "Pain", 1000, Unit.U);
-        saucisse = new Ingredient(1, "Saucisse", 20, Unit.G);
-        huile = new Ingredient(2, "Huile", 10000, Unit.L);
-    }
-
 
 
     @Test
