@@ -10,6 +10,8 @@ public class DataSource {
     
     private static final String USER = System.getenv("DB_USER");
     private static final String PASSWORD = System.getenv("DB_PASSWORD");
+
+
     static {
         try {
             Class.forName("org.postgresql.Driver");
